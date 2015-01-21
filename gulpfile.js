@@ -8,3 +8,7 @@ gulp.task('typescript', function() {
         .pipe(tsc({ emitError: false }))
         .pipe(gulp.dest('src/js'));
 });
+
+gulp.task('watch', function() {
+    gulp.watch('src/**/*.ts', ['typescript'])
+});
