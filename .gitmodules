@@ -1,0 +1,3 @@
+[submodule "modules/DefinitelyTyped"]
+	path = modules/DefinitelyTyped
+	url = git@github.com:borisyankov/DefinitelyTyped.git
