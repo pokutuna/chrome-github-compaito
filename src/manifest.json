@@ -6,9 +6,16 @@
     "description": "",
 
     "background": {
-        "scripts": [
-            "js/background.js"
-        ],
+        "scripts": ["js/background.js"],
         "persistent": false
-    }
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "http://*/*",
+                "https://*/*"
+            ],
+            "js": ["js/content.js"]
+        }
+    ]
 }

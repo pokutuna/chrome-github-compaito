@@ -10,5 +10,5 @@ gulp.task('typescript', function() {
 });
 
 gulp.task('watch', function() {
-    gulp.watch('src/**/*.ts', ['typescript'])
+    gulp.watch('src/**/*.ts', ['typescript']);
 });
