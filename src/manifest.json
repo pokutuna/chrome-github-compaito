@@ -1,0 +1,14 @@
+{
+    "manifest_version": 2,
+
+    "name": "compaito",
+    "version": "0.0.0",
+    "description": "",
+
+    "background": {
+        "scripts": [
+            "js/background.js"
+        ],
+        "persistent": false
+    }
+}
