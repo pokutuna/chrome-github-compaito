@@ -7,15 +7,11 @@
 
     "background": {
         "scripts": ["js/background.js"],
-        "persistent": false
+        "persistent": true
     },
-    "content_scripts": [
-        {
-            "matches": [
-                "http://*/*",
-                "https://*/*"
-            ],
-            "js": ["js/content.js"]
-        }
+    "permissions": [
+        "http://*/*",
+        "https://*/*",
+        "tabs"
     ]
 }
