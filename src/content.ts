@@ -6,8 +6,8 @@ interface DelegatedEvent extends Event {
 
 var delegate = function(
     match: (HTMLElement) => boolean,
-    listener: (DelegatedEevent) => any
-) {
+    listener: (DelegatedEevent) => void
+): (Event) => void {
     return function(event) {
         var el = event.target;
         do {
