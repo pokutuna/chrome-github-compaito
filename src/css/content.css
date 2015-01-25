@@ -1,5 +1,13 @@
 @charset "UTF-8";
 
-.compato-tooltip {
-    background-color: #F00;
+.chrome-extension-compaito.diff-picker {
+    z-index: 9999;
+}
+
+.chrome-extension-compaito.diff-picker:hover {
+    display: inline;
+}
+
+.chrome-extension-compaito.none {
+    display: none;
 }

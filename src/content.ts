@@ -1,25 +1,71 @@
 console.log('content')
 
-interface DelegatedEvent extends Event {
-    delegateTarget?: HTMLElement
-}
+module Compaito {
 
-var delegate = function(
-    match: (HTMLElement) => boolean,
-    listener: (DelegatedEevent) => void
-): (Event) => void {
-    return function(event) {
-        var el = event.target;
-        do {
-            if (!match(el)) continue;
-            event.delegateTarget = el
-            listener.apply(this, arguments)
-        } while (el = el.parentNode)
+    export function init(): void {
+        var diffPicker = new DiffPicker();
+
+        document.body.addEventListener('mouseover', Util.delegate(
+            Util.isCommitUrlAnchorElement,
+            (event) => diffPicker.show(event.delegateTarget)
+        ));
+
+        document.body.addEventListener('mouseout', Util.delegate(
+            Util.isCommitUrlAnchorElement,
+            (event) => setTimeout(() => { diffPicker.hide() }, 100)
+        ));
+    }
+
+    // interfaces
+    interface DelegatedEvent extends Event {
+        delegateTarget?: HTMLElement
+    }
+
+    // classes
+    export class DiffPicker {
+        elem: HTMLButtonElement;
+
+        constructor() {
+            this.elem = document.createElement('button');
+            ['chrome-extension-compaito', 'diff-picker', 'none'].forEach(
+                (c: string) => this.elem.classList.add(c)
+            );
+            document.body.appendChild(this.elem);
+        }
+
+        show(relatedElem:HTMLElement) {
+            var rect = relatedElem.getBoundingClientRect();
+            this.elem.style.position = 'absolute';
+            this.elem.style.top  = rect.top   + 'px';
+            this.elem.style.left = rect.right + 'px';
+            this.elem.classList.remove('none');
+        }
+
+        hide() {
+            this.elem.classList.add('none');
+        }
+    }
+
+    export module Util {
+        export function delegate(
+            match: (HTMLElement) => boolean, listener: (DelegatedEevent) => void
+        ): (Event) => void {
+            return function(event) {
+                var el = event.target;
+                do {
+                    if (!match(el)) continue;
+                    event.delegateTarget = el;
+                    listener.apply(this, arguments);
+                } while (el = el.parentNode);
+            }
+        }
+
+        var commitUrlPattern: RegExp = /\/commit\/[0-9a-f]{40}/;
+        export function isCommitUrlAnchorElement(elem: HTMLElement): boolean {
+            var a = <HTMLAnchorElement> elem;
+            return a.nodeName === 'A' && commitUrlPattern.test(a.href) ? true : false;
+        }
     }
 }
 
-document.body.addEventListener('mouseover', delegate(function(el) {
-    return el.nodeName === 'A' ? true : false
-}, function(event) {
-    console.log(event.delegateTarget)
-}))
+Compaito.init();
