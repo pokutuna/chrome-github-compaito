@@ -3,7 +3,7 @@ console.log('content')
 module Compaito {
 
     export function init(): void {
-        var revPickerr = new RevisionPicker();
+        var revPickerr = new RevisionPickClicker();
 
         document.body.addEventListener('mouseover', Util.delegate(
             Util.isCommitUrlAnchorElement,
@@ -25,13 +25,14 @@ module Compaito {
     }
 
     // classes
-    export class RevisionPicker {
+    export class RevisionPickClicker {
         container: HTMLDivElement;
         pickButton: HTMLButtonElement;
         cancelButton: HTMLButtonElement;
 
-        stickingElem: HTMLElement;
+        stickingElem: HTMLAnchorElement;
         stickingRevision: string = '';
+        pickingRevision: string = '';
 
         constructor() {
             this.container = document.createElement('div');
@@ -39,12 +40,12 @@ module Compaito {
 
             this.pickButton = document.createElement('button');
             this.pickButton.textContent = 'pick';
-            this.pickButton.addEventListener('click', (e) => this.onPick(e));
+            this.pickButton.addEventListener('click', (e) => this.onPickClick(e));
             Util.addClasses(this.pickButton, ['pick-button']);
 
             this.cancelButton = document.createElement('button');
             this.cancelButton.textContent = 'x';
-            this.cancelButton.addEventListener('click', (e) => this.onCancel(e));
+            this.cancelButton.addEventListener('click', (e) => this.onCancelClick(e));
             Util.addClasses(this.cancelButton, ['cancel-button', 'none']);
 
             this.container.appendChild(this.pickButton);
@@ -52,12 +53,36 @@ module Compaito {
             document.body.appendChild(this.container);
         }
 
-        show(relatedElem:HTMLElement) {
-            this.stickingElem = relatedElem;
+        stick(elem: HTMLElement) {
+            var anchor = <HTMLAnchorElement>elem;
+            this.stickingElem     = anchor;
+            this.stickingRevision = Util.extractRevision(anchor.href);
+
             var rect = this.stickingElem.getBoundingClientRect();
-            this.container.style.position = 'absolute';
-            this.container.style.top  = window.pageYOffset + rect.top + 'px';
-            this.container.style.left = window.pageXOffset + rect.right + 'px';
+            this.container.style.top  = window.pageYOffset + rect.top - 2 + 'px'; // move padding-top
+            this.container.style.left = window.pageXOffset + rect.right   + 'px';
+        }
+
+        setPickingRevision(rev: string): void {
+            this.pickingRevision = rev;
+            this.updatePickerView();
+        }
+
+        updatePickerView(toRev: string = ''): void {
+            var text;
+            if (this.pickingRevision) {
+                text = Util.abbRevision(this.pickingRevision) + '...' + Util.abbRevision(toRev);
+                this.cancelButton.classList.remove('none');
+            } else {
+                text = 'pick';
+                this.cancelButton.classList.add('none');
+            }
+            this.pickButton.textContent = text;
+        }
+
+        show(relatedElem: HTMLElement) {
+            this.stick(relatedElem);
+            this.updatePickerView(this.stickingRevision);
             this.container.classList.remove('none');
         }
 
@@ -65,24 +90,17 @@ module Compaito {
             this.container.classList.add('none');
         }
 
-        onPick(event: MouseEvent) {
-            var a = <HTMLAnchorElement> this.stickingElem;
-            var currentRev = this.stickingRevision;
-            this.stickingRevision = Util.extractRevision(a.href);
-            if (currentRev.length > 0) this.openCompareView(currentRev, this.stickingRevision);
-            this.pickButton.textContent = Util.abbRevision(this.stickingRevision) + '...';
-            this.cancelButton.classList.remove('none');
+        onPickClick(event: MouseEvent) {
+            if (this.pickingRevision) {
+                window.open(Util.constructCompareViewURL(this.pickingRevision, this.stickingRevision);
+                this.setPickingRevision('');
+            } else {
+                this.setPickingRevision(this.stickingRevision);
+            }
         }
 
-        onCancel(event: MouseEvent) {
-            this.pickButton.textContent = 'pick';
-            this.cancelButton.classList.add('none');
-            this.stickingRevision = '';
-            this.hide();
-        }
-
-        openCompareView(from, to: string) {
-            window.open(Util.constructCompareViewURL(from, to));
+        onCancelClick(event: MouseEvent) {
+            this.setPickingRevision('');
         }
     }
 
