@@ -1,19 +1,32 @@
 @charset "UTF-8";
 
-.chrome-extension-compaito.diff-picker {
+.chrome-extension-compaito.container {
     z-index: 9999;
-
-    color: white;
-    background-color: #2ecc71;
-    border-style: none;
-    font-size: 10px;
     font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
 }
-
-.chrome-extension-compaito.diff-picker:hover {
-    display: inline;
+.chrome-extension-compaito.container:hover {
+    display: block;
 }
 
-.chrome-extension-compaito.none {
+.chrome-extension-compaito button {
+    border-style: none;
+    color: white;
+    font-size: 10px;
+}
+.chrome-extension-compaito button:focus {
+    outline: 0;
+}
+
+.chrome-extension-compaito.pick-button {
+    background-color: #2ecc71;
+}
+
+.chrome-extension-compaito.cancel-button {
+    background-color: #e74c3c;
+    font-weight: bold;
+}
+
+.chrome-extension-compaito.none,
+.chrome-extension-compaito .none {
     display: none;
 }
