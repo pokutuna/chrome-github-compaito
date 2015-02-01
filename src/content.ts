@@ -20,6 +20,9 @@ module Compaito {
     interface DelegatedEvent extends Event {
         delegateTarget?: HTMLElement
     }
+    interface LocationWithOrigin extends Location {
+        origin?: string // already implemented on Chrome
+    }
 
     // classes
     export class RevisionPicker {
@@ -113,10 +116,11 @@ module Compaito {
             return match[1];
         }
         export function constructCompareViewURL(fromRev, toRev: string): string {
+            var loc = <LocationWithOrigin> location;
             var diffArg = [fromRev, toRev].join('...');
             var pattern: RegExp = /\/([^\/]+)\/([^\/]+)\/.*/;
-            var match = location.pathname.match(pattern);
-            return [location.origin, match[1], match[2], 'compare', diffArg].join('/');
+            var match = loc.pathname.match(pattern);
+            return [loc.origin, match[1], match[2], 'compare', diffArg].join('/');
         }
         export function abbRevision(revision: string): string {
             return revision.substring(0, 7) // follow Github abbreviation
