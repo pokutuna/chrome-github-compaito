@@ -4,15 +4,21 @@ module Compaito {
 
     export function init(): void {
         var revPicker = new RevisionPickClicker();
+        var hideTimer: number;
 
         document.body.addEventListener('mouseover', Util.delegate(
             Util.isCommitUrlAnchorElement,
-            (event) => revPicker.show(event.delegateTarget)
+            function(event) {
+                clearTimeout(hideTimer);
+                revPicker.show(event.delegateTarget);
+            }
         ));
 
         document.body.addEventListener('mouseout', Util.delegate(
             Util.isCommitUrlAnchorElement,
-            (event) => setTimeout(() => { revPicker.hide() }, 200)
+            function(event) {
+                hideTimer = setTimeout(() => { revPicker.hide() }, 100);
+            }
         ));
     }
 
