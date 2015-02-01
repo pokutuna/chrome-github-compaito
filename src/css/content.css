@@ -20,11 +20,19 @@
 }
 
 .chrome-extension-compaito.pick-button {
-    background-color: #2ecc71;
+    background-color: #3498db;
+}
+.chrome-extension-compaito.pick-button.picking {
+    background-color: #1abc9c;
+}
+
+.chrome-extension-compaito.pick-prev-button {
+    background-color: #2980b9;
+    font-weight: bold;
 }
 
 .chrome-extension-compaito.cancel-button {
-    background-color: #e74c3c;
+    background-color: #c0392b;
     font-weight: bold;
 }
 

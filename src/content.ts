@@ -34,6 +34,7 @@ module Compaito {
     export class RevisionPickClicker {
         container: HTMLDivElement;
         pickButton: HTMLButtonElement;
+        pickPrevButton: HTMLButtonElement;
         cancelButton: HTMLButtonElement;
 
         stickingElem: HTMLAnchorElement;
@@ -49,12 +50,18 @@ module Compaito {
             this.pickButton.addEventListener('click', (e) => this.onPickClick(e));
             Util.addClasses(this.pickButton, ['pick-button']);
 
+            this.pickPrevButton = document.createElement('button');
+            this.pickPrevButton.textContent = '~';
+            this.pickPrevButton.addEventListener('click', (e) => this.onPickPrevClick(e));
+            Util.addClasses(this.pickPrevButton, ['pick-prev-button']);
+
             this.cancelButton = document.createElement('button');
             this.cancelButton.textContent = 'x';
             this.cancelButton.addEventListener('click', (e) => this.onCancelClick(e));
             Util.addClasses(this.cancelButton, ['cancel-button', 'none']);
 
             this.container.appendChild(this.pickButton);
+            this.container.appendChild(this.pickPrevButton);
             this.container.appendChild(this.cancelButton);
             document.body.appendChild(this.container);
         }
@@ -78,9 +85,13 @@ module Compaito {
             var text;
             if (this.pickingRevision) {
                 text = Util.abbRevision(this.pickingRevision) + '...' + Util.abbRevision(toRev);
+                this.pickButton.classList.add('picking');
+                this.pickPrevButton.classList.add('none');
                 this.cancelButton.classList.remove('none');
             } else {
                 text = 'pick';
+                this.pickButton.classList.remove('picking');
+                this.pickPrevButton.classList.remove('none');
                 this.cancelButton.classList.add('none');
             }
             this.pickButton.textContent = text;
@@ -103,6 +114,10 @@ module Compaito {
             } else {
                 this.setPickingRevision(this.stickingRevision);
             }
+        }
+
+        onPickPrevClick(event: MouseEvent) {
+            this.setPickingRevision(this.stickingRevision + '~');
         }
 
         onCancelClick(event: MouseEvent) {
@@ -147,9 +162,9 @@ module Compaito {
             return [loc.origin, match[1], match[2], 'compare', diffArg].join('/');
         }
         export function abbRevision(revision: string): string {
-            return revision.substring(0, 7) // follow Github abbreviation
+            var isPrev = /~$/.test(revision);
+            return !isPrev ? revision.substring(0, 7) : revision.substring(0, 6) + '~';
         }
-
     }
 }
 
