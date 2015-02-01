@@ -3,16 +3,16 @@ console.log('content')
 module Compaito {
 
     export function init(): void {
-        var revPickerr = new RevisionPickClicker();
+        var revPicker = new RevisionPickClicker();
 
         document.body.addEventListener('mouseover', Util.delegate(
             Util.isCommitUrlAnchorElement,
-            (event) => revPickerr.show(event.delegateTarget)
+            (event) => revPicker.show(event.delegateTarget)
         ));
 
         document.body.addEventListener('mouseout', Util.delegate(
             Util.isCommitUrlAnchorElement,
-            (event) => setTimeout(() => { revPickerr.hide() }, 200)
+            (event) => setTimeout(() => { revPicker.hide() }, 200)
         ));
     }
 
@@ -92,7 +92,7 @@ module Compaito {
 
         onPickClick(event: MouseEvent) {
             if (this.pickingRevision) {
-                window.open(Util.constructCompareViewURL(this.pickingRevision, this.stickingRevision);
+                window.open(Util.constructCompareViewURL(this.pickingRevision, this.stickingRevision));
                 this.setPickingRevision('');
             } else {
                 this.setPickingRevision(this.stickingRevision);
