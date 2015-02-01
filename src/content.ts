@@ -79,7 +79,7 @@ module Compaito {
         }
 
         openCompareView(from, to: string) {
-            location.pathname = Util.constructCompareViewPath(from, to);
+            window.open(Util.constructCompareViewURL(from, to));
         }
     }
 
@@ -112,11 +112,11 @@ module Compaito {
             var match = url.match(commitUrlPattern);
             return match[1];
         }
-        export function constructCompareViewPath(fromRev, toRev: string): string {
+        export function constructCompareViewURL(fromRev, toRev: string): string {
             var diffArg = [fromRev, toRev].join('...');
             var pattern: RegExp = /\/([^\/]+)\/([^\/]+)\/.*/;
             var match = location.pathname.match(pattern);
-            return [match[1], match[2], 'compare', diffArg].join('/');
+            return [location.origin, match[1], match[2], 'compare', diffArg].join('/');
         }
         export function abbRevision(revision: string): string {
             return revision.substring(0, 7) // follow Github abbreviation
