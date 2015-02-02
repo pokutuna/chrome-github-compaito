@@ -3,6 +3,8 @@ var gulp    = require('gulp'),
     tsc     = require('gulp-tsc'),
     jade    = require('gulp-jade');
 
+gulp.task('default', ['build', 'watch']);
+
 gulp.task('typescript', function() {
     gulp.src('src/**/*.ts')
         .pipe(changed('app/js'), { extension: '.js' })
@@ -28,6 +30,11 @@ gulp.task('manifest', function() {
         .pipe(gulp.dest('app/'));
 });
 
+gulp.task('build', ['manifest', 'typescript', 'css', 'jade']);
+
 gulp.task('watch', function() {
+    gulp.watch('src/manifest.json', ['manifest']);
     gulp.watch('src/**/*.ts', ['typescript']);
+    gulp.watch('src/**/*.css', ['css']);
+    gulp.watch('src/**/*.jade', ['jade']);
 });
