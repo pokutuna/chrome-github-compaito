@@ -8,6 +8,7 @@
     "gulp-tsc": "^0.9.2"
   },
   "dependencies": {
-    "gulp-changed": "^1.1.0"
+    "gulp-changed": "^1.1.0",
+    "gulp-jade": "^0.11.0"
   }
 }
