@@ -24,13 +24,14 @@ $h-padding: $base-size / 2;
         color: $button-font-color;
         font-size: $base-size;
         height: $base-size * 2;
+        margin: 0;
         padding: $v-padding $h-padding;
         &:focus { outline: 0; }
     }
 
     .pick-button {
         background-color: $pick-button-color;
-        padding: $v-padding $h-padding $v-padding 0;   /* for moving text to left balloon arrow */
+        padding: $v-padding $h-padding $v-padding 0;
 
         &:after {
             content: "";

@@ -50,12 +50,10 @@ module Compaito {
             Util.addClasses(this.pickButton, ['pick-button']);
 
             this.pickPrevButton = document.createElement('button');
-            this.pickPrevButton.textContent = '~';
             this.pickPrevButton.addEventListener('click', (e) => this.onPickPrevClick(e));
             Util.addClasses(this.pickPrevButton, ['pick-prev-button']);
 
             this.cancelButton = document.createElement('button');
-            this.cancelButton.textContent = 'x';
             this.cancelButton.addEventListener('click', (e) => this.onCancelClick(e));
             Util.addClasses(this.cancelButton, ['cancel-button', 'none']);
 
