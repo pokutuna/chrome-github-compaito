@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "gulp-changed": "^1.1.0",
-    "gulp-jade": "^0.11.0"
+    "gulp-jade": "^0.11.0",
+    "gulp-sass": "^1.3.2"
   }
 }
