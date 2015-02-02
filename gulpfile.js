@@ -17,10 +17,10 @@ gulp.task('css', function() {
 });
 
 gulp.task('jade', function() {
-    gulp.src('src/jade/**/*.jade')
-        .pipe(jade())
+    gulp.src('src/**/*.jade')
+        .pipe(jade({ pretty: true }))
         .pipe(gulp.dest('app/html'));
-})
+});
 
 gulp.task('watch', function() {
     gulp.watch('src/**/*.ts', ['typescript']);
