@@ -46,7 +46,6 @@ module Compaito {
             Util.addClasses(this.container, ['container', 'none']);
 
             this.pickButton = document.createElement('button');
-            this.pickButton.textContent = 'pick';
             this.pickButton.addEventListener('click', (e) => this.onPickClick(e));
             Util.addClasses(this.pickButton, ['pick-button']);
 
@@ -63,6 +62,7 @@ module Compaito {
             this.container.appendChild(this.pickButton);
             this.container.appendChild(this.pickPrevButton);
             this.container.appendChild(this.cancelButton);
+            this.updatePickerView();
             document.body.appendChild(this.container);
         }
 
@@ -91,7 +91,7 @@ module Compaito {
                 this.pickPrevButton.classList.add('none');
                 this.cancelButton.classList.remove('none');
             } else {
-                text = 'pick';
+                text = 'compare';
                 this.pickButton.classList.remove('picking');
                 this.pickPrevButton.classList.remove('none');
                 this.cancelButton.classList.add('none');
