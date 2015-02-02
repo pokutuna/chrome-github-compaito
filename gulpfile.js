@@ -15,7 +15,7 @@ gulp.task('typescript', function() {
 
 gulp.task('sass', function() {
     gulp.src('src/**/*.scss')
-        .pipe(sass())
+        .pipe(sass({ errLogToConsole: true }))
         .pipe(gulp.dest('app/css'));
 });
 
