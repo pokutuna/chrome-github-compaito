@@ -5,14 +5,14 @@ var gulp    = require('gulp'),
 
 gulp.task('typescript', function() {
     gulp.src('src/**/*.ts')
-        .pipe(changed('src/js'), { extension: '.js' })
+        .pipe(changed('app/js'), { extension: '.js' })
         .pipe(tsc({ emitError: false }))
         .pipe(gulp.dest('app/js'));
 });
 
 // TODO less
 gulp.task('css', function() {
-    gulp.src('src/css/*.css')
+    gulp.src('src/**/*.css')
         .pipe(gulp.dest('app/css'));
 });
 
