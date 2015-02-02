@@ -157,7 +157,7 @@ module Compaito {
         export function constructCompareViewURL(fromRev, toRev: string): string {
             var loc = <LocationHavingOrigin> location;
             var diffArg = [fromRev, toRev].join('...');
-            var pattern: RegExp = /\/([^\/]+)\/([^\/]+)\/.*/;
+            var pattern: RegExp = /\/([^\/]+)\/([^\/]+)(\/.*)?/;
             var match = loc.pathname.match(pattern);
             return [loc.origin, match[1], match[2], 'compare', diffArg].join('/');
         }
