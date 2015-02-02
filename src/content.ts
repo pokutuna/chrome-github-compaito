@@ -72,8 +72,10 @@ module Compaito {
             this.stickingRevision = Util.extractRevision(anchor.href);
 
             var rect = this.stickingElem.getBoundingClientRect();
-            this.container.style.top  = window.pageYOffset + rect.top - 2 + 'px'; // move padding-top
-            this.container.style.left = window.pageXOffset + rect.right   + 'px';
+            this.container.style.top  =
+                window.pageYOffset + rect.top - 2 + 'px'; // pull up padding-top
+            this.container.style.left =
+                window.pageXOffset + rect.right + 10 + 'px'; // slide balloon arrow width
         }
 
         setPickingRevision(rev: string): void {

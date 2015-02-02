@@ -21,9 +21,26 @@
 
 .chrome-extension-compaito.pick-button {
     background-color: #3498db;
+    padding: 2px 6px 2px 0px;   /* for moving text to left balloon arrow */
+}
+.chrome-extension-compaito.pick-button:after {
+  content: "";
+  position: absolute;
+  display: block;
+  top: 50%;
+  left: -10px;
+  margin-top: -10px;
+  width: 0px;
+  height: 0px;
+  border-style: solid;
+  border-width: 10px 10px 10px 0;
+  border-color: transparent #3498db transparent transparent;
 }
 .chrome-extension-compaito.pick-button.picking {
     background-color: #1abc9c;
+}
+.chrome-extension-compaito.pick-button.picking:after {
+    border-color: transparent #1abc9c transparent transparent;
 }
 
 .chrome-extension-compaito.pick-prev-button {
