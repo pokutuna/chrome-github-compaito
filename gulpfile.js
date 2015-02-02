@@ -22,6 +22,12 @@ gulp.task('jade', function() {
         .pipe(gulp.dest('app/html'));
 });
 
+// TODO fill-in version
+gulp.task('manifest', function() {
+    gulp.src('src/manifest.json')
+        .pipe(gulp.dest('app/'));
+});
+
 gulp.task('watch', function() {
     gulp.watch('src/**/*.ts', ['typescript']);
 });
