@@ -1,6 +1,7 @@
 var gulp    = require('gulp'),
     changed = require('gulp-changed'),
     tsc     = require('gulp-tsc'),
+    sass    = require('gulp-sass'),
     jade    = require('gulp-jade');
 
 gulp.task('default', ['build', 'watch']);
@@ -12,9 +13,9 @@ gulp.task('typescript', function() {
         .pipe(gulp.dest('app/js'));
 });
 
-// TODO less
-gulp.task('css', function() {
-    gulp.src('src/**/*.css')
+gulp.task('sass', function() {
+    gulp.src('src/**/*.scss')
+        .pipe(sass())
         .pipe(gulp.dest('app/css'));
 });
 
@@ -30,11 +31,11 @@ gulp.task('manifest', function() {
         .pipe(gulp.dest('app/'));
 });
 
-gulp.task('build', ['manifest', 'typescript', 'css', 'jade']);
+gulp.task('build', ['manifest', 'typescript', 'sass', 'jade']);
 
 gulp.task('watch', function() {
     gulp.watch('src/manifest.json', ['manifest']);
     gulp.watch('src/**/*.ts', ['typescript']);
-    gulp.watch('src/**/*.css', ['css']);
+    gulp.watch('src/**/*.scss', ['sass']);
     gulp.watch('src/**/*.jade', ['jade']);
 });
