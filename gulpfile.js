@@ -28,7 +28,6 @@ gulp.task('jade', function() {
         .pipe(gulp.dest('app/html'));
 });
 
-// TODO fill-in version
 gulp.task('manifest', function() {
     version().then(function(version) {
         gulp.src('src/manifest.json')
@@ -40,18 +39,16 @@ gulp.task('manifest', function() {
 function version() {
     var promise = new Promise(function(resolve, reject) {
         exec('git describe --tags --always --dirty', function(err, stdout, stderr) {
-            if (err) {
-                reject(err);
-                return;
-            }
-            var version = stdout.replace(/\n$/, '')
-                    .replace(/-(\d+)/, '.$1')
-                    .replace(/-g[0-9a-f]+/, '')
-                    .replace(/-dirty/, '');
-            resolve(version);
+            return err ? reject(err) : resolve(stdout);
         });
     });
-    return promise;
+    return promise.then(function(desc) {
+        var version = desc.replace(/\n$/, '')
+            .replace(/-(\d+)/, '.$1')
+            .replace(/-g[0-9a-f]+/, '')
+            .replace(/-dirty/, '');
+        return version;
+    });
 }
 
 gulp.task('build', ['manifest', 'typescript', 'sass', 'jade']);
