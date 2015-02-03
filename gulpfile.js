@@ -31,11 +31,10 @@ gulp.task('jade', function() {
 gulp.task('manifest', function() {
     version().then(function(version) {
         gulp.src('src/manifest.json')
-        .pipe(editJson({version : version }))
+        .pipe(editJson({ version : version }))
         .pipe(gulp.dest('app/'));
     });
 });
-
 function version() {
     var promise = new Promise(function(resolve, reject) {
         exec('git describe --tags --always --dirty', function(err, stdout, stderr) {
