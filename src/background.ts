@@ -1,6 +1,6 @@
 /// <reference path="../modules/DefinitelyTyped/chrome/chrome.d.ts" />
 
-chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+chrome.tabs.onUpdated.addListener(function (tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab) {
    if (changeInfo.status === 'complete') {
        // TODO check tab.url github
        if (/^chrome/.test(tab.url)) return
