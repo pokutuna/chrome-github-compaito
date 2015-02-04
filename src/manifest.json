@@ -2,7 +2,7 @@
     "manifest_version": 2,
 
     "name": "compaito",
-    "version": "0.0.0",
+    "version": "generate by 'manifesft' gulp task",
     "description": "",
 
     "background": {
