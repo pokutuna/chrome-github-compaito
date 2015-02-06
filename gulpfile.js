@@ -4,6 +4,7 @@ var gulp       = require('gulp'),
     sass       = require('gulp-sass'),
     jade       = require('gulp-jade'),
     webpack    = require('gulp-webpack'),
+    named      = require('vinyl-named'),
     exec       = require('child_process').exec,
     Promise    = require('es6-promise').Promise;
 
@@ -16,17 +17,10 @@ gulp.task('typescript', function() {
         .js.pipe(gulp.dest('src/build'));
 });
 
-var outJSFiles = ['background.js', 'content.js', 'options.js'];
-var entryConf = outJSFiles.reduce(function(conf, file) {
-    conf[file] = './src/build/' + file;
-    return conf;
-}, {});
 gulp.task('webpack', ['typescript'], function() {
     return gulp.src('src/build/*.js')
-        .pipe(webpack({
-            entry: entryConf,
-            output: { filename: '[name]' }
-        }))
+        .pipe(named())
+        .pipe(webpack())
         .pipe(gulp.dest('app/js'));
 });
 
