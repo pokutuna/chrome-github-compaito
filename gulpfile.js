@@ -3,17 +3,54 @@ var gulp       = require('gulp'),
     typescript = require('gulp-typescript'),
     sass       = require('gulp-sass'),
     jade       = require('gulp-jade'),
+    glob       = require('glob'),
+    path       = require('path'),
     exec       = require('child_process').exec,
+    concat     = require('gulp-concat'),
     Promise    = require('es6-promise').Promise;
 
 gulp.task('default', ['build', 'watch']);
 
-var tsProject = typescript.createProject({ sortOutput: true });
-gulp.task('typescript', function() {
-    gulp.src('src/**/*.ts')
-        .pipe(typescript(tsProject))
-        .js.pipe(gulp.dest('app/js'));
+
+
+var tsProject = typescript.createProject({ noExternalResolve: true, sortOutput: true });
+var distributeFiles = glob.sync('src/*.ts').map(function(p) { return path.basename(p, '.ts'); });
+distributeFiles.forEach(function(name) {
+    var project = typescript.createProject({ noExternalResolve: true, sortOutput: true });
+    gulp.task(name, function() {
+        gulp.src('src/**/*.ts')
+        .pipe(typescript(project, { referencedFrom: [name.concat('.ts')] }))
+        .js
+        .pipe(concat(name.concat('.js')))
+        .pipe(gulp.dest('app/js'));
+    });
 });
+
+gulp.task('typescript', distributeFiles);
+
+// gulp.task('typescript', function(cb) {
+//     distributeFiles.forEach(function(filepath) {
+//         var basename = path.basename(filepath);
+//         gulp.src('src/**/*.ts')
+//             .pipe(typescript(tsProject, { referencedFrom: [basename]}))
+//             .js
+//             .pipe(concat(path.basename(basename, '.ts').concat('.js')))
+//             .pipe(gulp.dest('app/js'));
+//     });
+//     // var promise = new Promise(function(resolve, reject) { resolve(); });
+//     // distributeFiles.forEach(function(filepath) {
+//     //     promise.then(function() {
+//     //         console.log(filepath);
+//     //         var basename = path.basename(filepath);
+//     //         gulp.src('src/**/*.ts')
+//     //             .pipe(typescript(tsProject, { referencedFrom: [basename]}))
+//     //             .js
+//     //             .pipe(concat(path.basename(basename, '.ts').concat('.js')))
+//     //             .pipe(gulp.dest('app/js'));
+//     //     });
+//     // });
+//     // promise.then(cb);
+// });
 
 gulp.task('sass', function() {
     gulp.src('src/**/*.scss')
