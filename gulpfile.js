@@ -1,19 +1,18 @@
-var gulp     = require('gulp'),
-    changed  = require('gulp-changed'),
-    editJson = require('gulp-json-editor'),
-    tsc      = require('gulp-tsc'),
-    sass     = require('gulp-sass'),
-    jade     = require('gulp-jade'),
-    exec     = require('child_process').exec,
-    Promise  = require('es6-promise').Promise;
+var gulp       = require('gulp'),
+    editJson   = require('gulp-json-editor'),
+    typescript = require('gulp-typescript'),
+    sass       = require('gulp-sass'),
+    jade       = require('gulp-jade'),
+    exec       = require('child_process').exec,
+    Promise    = require('es6-promise').Promise;
 
 gulp.task('default', ['build', 'watch']);
 
+var tsProject = typescript.createProject({ sortOutput: true });
 gulp.task('typescript', function() {
     gulp.src('src/**/*.ts')
-        .pipe(changed('app/js'), { extension: '.js' })
-        .pipe(tsc({ emitError: false }))
-        .pipe(gulp.dest('app/js'));
+        .pipe(typescript(tsProject))
+        .js.pipe(gulp.dest('app/js'));
 });
 
 gulp.task('sass', function() {
