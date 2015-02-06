@@ -10,26 +10,26 @@ gulp.task('default', ['build', 'watch']);
 
 var tsProject = typescript.createProject({ sortOutput: true });
 gulp.task('typescript', function() {
-    gulp.src('src/**/*.ts')
+    return gulp.src('src/**/*.ts')
         .pipe(typescript(tsProject))
         .js.pipe(gulp.dest('app/js'));
 });
 
 gulp.task('sass', function() {
-    gulp.src('src/**/*.scss')
+    return gulp.src('src/**/*.scss')
         .pipe(sass({ errLogToConsole: true }))
         .pipe(gulp.dest('app/css'));
 });
 
 gulp.task('jade', function() {
-    gulp.src('src/**/*.jade')
+    return gulp.src('src/**/*.jade')
         .pipe(jade({ pretty: true }))
         .pipe(gulp.dest('app/html'));
 });
 
 gulp.task('manifest', function() {
-    version().then(function(version) {
-        gulp.src('src/manifest.json')
+    return version().then(function(version) {
+        return gulp.src('src/manifest.json')
         .pipe(editJson({ version : version }))
         .pipe(gulp.dest('app/'));
     });
