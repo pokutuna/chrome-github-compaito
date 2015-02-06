@@ -1,8 +1,7 @@
 /// <reference path="../modules/DefinitelyTyped/chrome/chrome.d.ts" />
+import common = require('./common');
 
-console.log('options');
-
-module CompaitoOption {
+module CompaitoOptions {
 
     export function init(): void {
         document.addEventListener('DOMContentLoaded', function() {
@@ -10,13 +9,6 @@ module CompaitoOption {
             new ConfigEditor(elem);
         });
     }
-
-    interface CompaitoConfig {
-        hosts: { [key:string]: boolean }
-    }
-    var DEFAULT_CONFIG: CompaitoConfig  = {
-        hosts: { 'github.com': true }
-    };
 
     class ConfigEditor {
         container:  HTMLElement;
@@ -48,7 +40,7 @@ module CompaitoOption {
             });
         }
 
-        validateConfig(ok: (config: CompaitoConfig) => void, ng?: () => void) {
+        validateConfig(ok: (config: common.CompaitoConfig) => void, ng?: () => void) {
             var jsonString: string = this.textarea.value;
             var isValid = this.isConfigValid(jsonString);
             if (isValid) {
@@ -68,11 +60,11 @@ module CompaitoOption {
         }
 
         restoreConfig() {
-            chrome.storage.sync.get(DEFAULT_CONFIG, (config: CompaitoConfig) => {
+            chrome.storage.sync.get(common.DEFAULT_CONFIG, (config: common.CompaitoConfig) => {
                 this.textarea.value = JSON.stringify(config.hosts, null, 2);
             });
         }
     }
 }
 
-CompaitoOption.init();
+CompaitoOptions.init();

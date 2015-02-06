@@ -1,37 +1,28 @@
-console.log('content')
+import common = require('./common');
 
-module Compaito {
+module CompaitoContent {
 
     export function init(): void {
         var revPicker = new RevisionPickClicker();
         var hideTimer: number;
 
-        document.body.addEventListener('mouseover', Util.delegate(
-            Util.isCommitUrlAnchorElement,
+        document.body.addEventListener('mouseover', common.util.delegate(
+            common.github.isCommitUrlAnchorElement,
             function(event) {
                 clearTimeout(hideTimer);
                 revPicker.show(event.delegateTarget);
             }
         ));
 
-        document.body.addEventListener('mouseout', Util.delegate(
-            Util.isCommitUrlAnchorElement,
+        document.body.addEventListener('mouseout', common.util.delegate(
+            common.github.isCommitUrlAnchorElement,
             function(event) {
                 hideTimer = setTimeout(() => { revPicker.hide() }, 100);
             }
         ));
     }
 
-    // interfaces
-    interface DelegatedEvent extends Event {
-        delegateTarget?: HTMLElement
-    }
-    interface LocationHavingOrigin extends Location {
-        origin: string // already implemented on Chrome
-    }
-
-    // classes
-    export class RevisionPickClicker {
+    class RevisionPickClicker {
         container: HTMLDivElement;
         pickButton: HTMLButtonElement;
         pickPrevButton: HTMLButtonElement;
@@ -43,19 +34,19 @@ module Compaito {
 
         constructor() {
             this.container = document.createElement('div');
-            Util.addClasses(this.container, ['container', 'none']);
+            common.util.addClasses(this.container, ['container', 'none']);
 
             this.pickButton = document.createElement('button');
             this.pickButton.addEventListener('click', (e) => this.onPickClick(e));
-            Util.addClasses(this.pickButton, ['pick-button']);
+            common.util.addClasses(this.pickButton, ['pick-button']);
 
             this.pickPrevButton = document.createElement('button');
             this.pickPrevButton.addEventListener('click', (e) => this.onPickPrevClick(e));
-            Util.addClasses(this.pickPrevButton, ['pick-prev-button']);
+            common.util.addClasses(this.pickPrevButton, ['pick-prev-button']);
 
             this.cancelButton = document.createElement('button');
             this.cancelButton.addEventListener('click', (e) => this.onCancelClick(e));
-            Util.addClasses(this.cancelButton, ['cancel-button', 'none']);
+            common.util.addClasses(this.cancelButton, ['cancel-button', 'none']);
 
             this.container.appendChild(this.pickButton);
             this.container.appendChild(this.pickPrevButton);
@@ -67,7 +58,7 @@ module Compaito {
         stick(elem: HTMLElement) {
             var anchor = <HTMLAnchorElement>elem;
             this.stickingElem     = anchor;
-            this.stickingRevision = Util.extractRevision(anchor.href);
+            this.stickingRevision = common.github.extractRevision(anchor.href);
 
             var rect = this.stickingElem.getBoundingClientRect();
             this.container.style.top  =
@@ -84,7 +75,7 @@ module Compaito {
         updatePickerView(toRev: string = ''): void {
             var text;
             if (this.pickingRevision) {
-                text = Util.abbRevision(this.pickingRevision) + '...' + Util.abbRevision(toRev);
+                text = common.github.abbrevRevision(this.pickingRevision) + '...' + common.github.abbrevRevision(toRev);
                 this.pickButton.classList.add('picking');
                 this.pickPrevButton.classList.add('none');
                 this.cancelButton.classList.remove('none');
@@ -109,7 +100,7 @@ module Compaito {
 
         onPickClick(event: MouseEvent) {
             if (this.pickingRevision) {
-                window.open(Util.constructCompareViewURL(this.pickingRevision, this.stickingRevision));
+                window.open(common.github.constructCompareViewURL(this.pickingRevision, this.stickingRevision));
                 this.setPickingRevision('');
             } else {
                 this.setPickingRevision(this.stickingRevision);
@@ -124,48 +115,6 @@ module Compaito {
             this.setPickingRevision('');
         }
     }
-
-    export module Util {
-        export function delegate(
-            match: (HTMLElement) => boolean, listener: (DelegatedEevent) => void
-        ): (Event) => void {
-            return function(event) {
-                var el = event.target;
-                do {
-                    if (!match(el)) continue;
-                    event.delegateTarget = el;
-                    listener.apply(this, arguments);
-                } while (el = el.parentNode);
-            }
-        }
-
-        export function addClasses(elem: HTMLElement, classes: string[]): void {
-            elem.classList.add('chrome-extension-compaito');
-            classes.forEach((c: string) => elem.classList.add(c));
-        }
-
-        // Github
-        export var commitUrlPattern: RegExp = /\/commit\/([0-9a-f]{40})/;
-        export function isCommitUrlAnchorElement(elem: HTMLElement): boolean {
-            var a = <HTMLAnchorElement> elem;
-            return a.nodeName === 'A' && commitUrlPattern.test(a.href) ? true : false;
-        }
-        export function extractRevision(url: string): string {
-            var match = url.match(commitUrlPattern);
-            return match[1];
-        }
-        export function constructCompareViewURL(fromRev, toRev: string): string {
-            var loc = <LocationHavingOrigin> location;
-            var diffArg = [fromRev, toRev].join('...');
-            var pattern: RegExp = /\/([^\/]+)\/([^\/]+)(\/.*)?/;
-            var match = loc.pathname.match(pattern);
-            return [loc.origin, match[1], match[2], 'compare', diffArg].join('/');
-        }
-        export function abbRevision(revision: string): string {
-            var isPrev = /~$/.test(revision);
-            return !isPrev ? revision.substring(0, 7) : revision.substring(0, 6) + '~';
-        }
-    }
 }
 
-Compaito.init();
+CompaitoContent.init();
