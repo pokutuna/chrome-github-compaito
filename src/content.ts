@@ -1,21 +1,19 @@
-import common = require('./common');
-
 module CompaitoContent {
 
     export function init(): void {
         var revPicker = new RevisionPickClicker();
         var hideTimer: number;
 
-        document.body.addEventListener('mouseover', common.util.delegate(
-            common.github.isCommitUrlAnchorElement,
+        document.body.addEventListener('mouseover', util.delegate(
+            github.isCommitUrlAnchorElement,
             function(event) {
                 clearTimeout(hideTimer);
                 revPicker.show(event.delegateTarget);
             }
         ));
 
-        document.body.addEventListener('mouseout', common.util.delegate(
-            common.github.isCommitUrlAnchorElement,
+        document.body.addEventListener('mouseout', util.delegate(
+            github.isCommitUrlAnchorElement,
             function(event) {
                 hideTimer = setTimeout(() => { revPicker.hide() }, 100);
             }
@@ -34,19 +32,19 @@ module CompaitoContent {
 
         constructor() {
             this.container = document.createElement('div');
-            common.util.addClasses(this.container, ['container', 'none']);
+            util.addClasses(this.container, ['container', 'none']);
 
             this.pickButton = document.createElement('button');
             this.pickButton.addEventListener('click', (e) => this.onPickClick(e));
-            common.util.addClasses(this.pickButton, ['pick-button']);
+            util.addClasses(this.pickButton, ['pick-button']);
 
             this.pickPrevButton = document.createElement('button');
             this.pickPrevButton.addEventListener('click', (e) => this.onPickPrevClick(e));
-            common.util.addClasses(this.pickPrevButton, ['pick-prev-button']);
+            util.addClasses(this.pickPrevButton, ['pick-prev-button']);
 
             this.cancelButton = document.createElement('button');
             this.cancelButton.addEventListener('click', (e) => this.onCancelClick(e));
-            common.util.addClasses(this.cancelButton, ['cancel-button', 'none']);
+            util.addClasses(this.cancelButton, ['cancel-button', 'none']);
 
             this.container.appendChild(this.pickButton);
             this.container.appendChild(this.pickPrevButton);
@@ -58,12 +56,12 @@ module CompaitoContent {
         stick(elem: HTMLElement) {
             var anchor = <HTMLAnchorElement>elem;
             this.stickingElem     = anchor;
-            this.stickingRevision = common.github.extractRevision(anchor.href);
+            this.stickingRevision = github.extractRevision(anchor.href);
 
             var rect = this.stickingElem.getBoundingClientRect();
             this.container.style.top  =
                 window.pageYOffset + rect.top - 2 + 'px'; // pull up padding-top
-            this.container.style.left =
+                this.container.style.left =
                 window.pageXOffset + rect.right + 10 + 'px'; // slide balloon arrow width
         }
 
@@ -75,7 +73,7 @@ module CompaitoContent {
         updatePickerView(toRev: string = ''): void {
             var text;
             if (this.pickingRevision) {
-                text = common.github.abbrevRevision(this.pickingRevision) + '...' + common.github.abbrevRevision(toRev);
+                text = github.abbrevRevision(this.pickingRevision) + '...' + github.abbrevRevision(toRev);
                 this.pickButton.classList.add('picking');
                 this.pickPrevButton.classList.add('none');
                 this.cancelButton.classList.remove('none');
@@ -100,7 +98,7 @@ module CompaitoContent {
 
         onPickClick(event: MouseEvent) {
             if (this.pickingRevision) {
-                window.open(common.github.constructCompareViewURL(this.pickingRevision, this.stickingRevision));
+                window.open(github.constructCompareViewURL(this.pickingRevision, this.stickingRevision));
                 this.setPickingRevision('');
             } else {
                 this.setPickingRevision(this.stickingRevision);
@@ -113,6 +111,57 @@ module CompaitoContent {
 
         onCancelClick(event: MouseEvent) {
             this.setPickingRevision('');
+        }
+    }
+
+    interface DelegatedEvent extends Event {
+        delegateTarget?: HTMLElement
+    }
+    interface LocationHavingOrigin extends Location {
+        origin: string // already implemented on Chrome
+    }
+
+    module util {
+        export function delegate(
+            match: (HTMLElement) => boolean, listener: (DelegatedEevent) => void
+        ): (Event) => void {
+            return function(event) {
+                var el = event.target;
+                do {
+                    if (!match(el)) continue;
+                    event.delegateTarget = el;
+                    listener.apply(this, arguments);
+                } while (el = el.parentNode);
+            }
+        }
+
+        export function addClasses(elem: HTMLElement, classes: string[]): void {
+            elem.classList.add('chrome-extension-compaito');
+            classes.forEach((c: string) => elem.classList.add(c));
+        }
+    }
+
+    module github {
+        export var commitUrlPattern: RegExp = /\/commit\/([0-9a-f]{40})/;
+        export function isCommitUrlAnchorElement(elem: HTMLElement): boolean {
+            var a = <HTMLAnchorElement> elem;
+            return a.nodeName === 'A' && commitUrlPattern.test(a.href) ? true : false;
+        }
+
+        export function extractRevision(url: string): string {
+            var match = url.match(commitUrlPattern);
+            return match[1];
+        }
+        export function constructCompareViewURL(fromRev, toRev: string): string {
+            var loc = <LocationHavingOrigin> location;
+            var diffArg = [fromRev, toRev].join('...');
+            var pattern: RegExp = /\/([^\/]+)\/([^\/]+)(\/.*)?/;
+            var match = loc.pathname.match(pattern);
+            return [loc.origin, match[1], match[2], 'compare', diffArg].join('/');
+        }
+        export function abbrevRevision(revision: string): string {
+            var isPrev = /~$/.test(revision);
+            return !isPrev ? revision.substring(0, 7) : revision.substring(0, 6) + '~';
         }
     }
 }
