@@ -58,11 +58,11 @@ function version() {
     });
 }
 
-gulp.task('build', ['manifest', 'typescript', 'sass', 'jade']);
+gulp.task('build', ['manifest', 'sass', 'jade', 'webpack']);
 
 gulp.task('watch', function() {
     gulp.watch('src/manifest.json', ['manifest']);
-    gulp.watch('src/**/*.ts', ['typescript']);
+    gulp.watch('src/**/*.ts', ['webpack']);
     gulp.watch('src/**/*.scss', ['sass']);
     gulp.watch('src/**/*.jade', ['jade']);
 });
