@@ -3,6 +3,7 @@ var gulp       = require('gulp'),
     typescript = require('gulp-typescript'),
     sass       = require('gulp-sass'),
     jade       = require('gulp-jade'),
+    webpack    = require('gulp-webpack'),
     exec       = require('child_process').exec,
     Promise    = require('es6-promise').Promise;
 
@@ -12,7 +13,21 @@ var tsProject = typescript.createProject({ module: 'commonjs', sortOutput: true 
 gulp.task('typescript', function() {
     return gulp.src('src/**/*.ts')
         .pipe(typescript(tsProject))
-        .js.pipe(gulp.dest('app/js'));
+        .js.pipe(gulp.dest('src/build'));
+});
+
+var outJSFiles = ['background.js', 'content.js', 'options.js'];
+var entryConf = outJSFiles.reduce(function(conf, file) {
+    conf[file] = './src/build/' + file;
+    return conf;
+}, {});
+gulp.task('webpack', ['typescript'], function() {
+    return gulp.src('src/build/*.js')
+        .pipe(webpack({
+            entry: entryConf,
+            output: { filename: '[name]' }
+        }))
+        .pipe(gulp.dest('app/js'));
 });
 
 gulp.task('sass', function() {
