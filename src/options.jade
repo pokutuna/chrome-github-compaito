@@ -5,18 +5,28 @@ html(lang='en')
     link(rel='stylesheet' href='../css/options.css')
     script(src='../js/options.js')
   body
-    h1 chrome-GitHub-compaito
+    #icon
+    h1 chrome-github-compaito
 
     #config
-      p JSON format: { hostname: isEnable }
+      h2 options
+      p#format JSON format: { hostname: isEnable }
       textarea#hosts
       button#save Save
 
-    #help
-      p example:
-      pre#example
-        | {
-        |   "github.com": true,
-        |   "your.github.enterprise.com": true,
-        |   "temporary.disabled.host": false
-        | }
+      #help
+        p example:
+        pre#example
+          | {
+          |   "github.com": true,
+          |   "your.github.enterprise.com": true,
+          |   "temporary.disabled.host": false
+          | }
+
+    #link
+      h2 links
+      ul
+        li
+          a(href='#') Chrome Webstore(woking)
+        li
+          a(href='https://github.com/pokutuna/chrome-github-compaito') GitHub Repository

@@ -5,6 +5,26 @@ body {
     margin-left: 155px;
 }
 
+#icon {
+    background-image: url("../img/compaito128.png");
+    height: 52px;
+    background-position: 0 50%;
+    background-repeat: no-repeat;
+}
+
+h1 {
+    margin-top: 0px;
+    font-size: 2em;
+}
+
+h2 {
+    margin-bottom: 0.3em;
+}
+
+#format {
+    margin-bottom: 2px;
+}
+
 textarea {
     font-size: $font-size;
     height: 8em;
