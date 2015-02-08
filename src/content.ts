@@ -18,6 +18,8 @@ module CompaitoContent {
                 hideTimer = setTimeout(() => { revPicker.hide() }, 100);
             }
         ));
+
+        document.body.addEventListener('click', (event) => revPicker.hide());
     }
 
     class RevisionPickClicker {
