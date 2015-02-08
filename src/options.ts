@@ -56,6 +56,7 @@ module CompaitoOptions {
                 common.DEFAULT_CONFIG, (data: common.CompaitoConfigData) => {
                     this.textarea.value =
                         (new common.CompaitoConfig(data)).hostConfigJson();
+                    this.saveButton.disabled = true;
                 }
             );
         }

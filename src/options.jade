@@ -8,5 +8,15 @@ html(lang='en')
     h1 chrome-GitHub-compaito
 
     #config
+      p JSON format: { hostname: isEnable }
       textarea#hosts
       button#save Save
+
+    #help
+      p example:
+      pre#example
+        | {
+        |   "github.com": true,
+        |   "your.github.enterprise.com": true,
+        |   "temporary.disabled.host": false
+        | }
