@@ -28,7 +28,8 @@ module CompaitoOptions {
             this.validateConfig(
                 () => this.saveButton.disabled = false,
                 () => this.saveButton.disabled = true
-            )
+            );
+            this.saveButton.textContent = 'Save';
         }
 
         onSaveClick(event: MouseEvent) {
@@ -40,9 +41,9 @@ module CompaitoOptions {
             });
         }
 
-        validateConfig(ok: (config: common.CompaitoConfig) => void, ng?: () => void) {
+        validateConfig(ok: (data: common.CompaitoConfigData) => void, ng?: () => void) {
             var jsonString: string = this.textarea.value;
-            var isValid = this.isConfigValid(jsonString);
+            var isValid = common.CompaitoConfig.isHostConfigJsonValid(jsonString);
             if (isValid) {
                 ok({ hosts: JSON.parse(jsonString) });
             } else if (ng) {
@@ -50,19 +51,13 @@ module CompaitoOptions {
             }
         }
 
-        isConfigValid(jsonString: string): boolean {
-            try {
-                var obj = JSON.parse(jsonString);
-                return Object.keys(obj).every((key) => { return typeof obj[key] === 'boolean' });
-            } catch(e) {
-                return false;
-            }
-        }
-
         restoreConfig() {
-            chrome.storage.sync.get(common.DEFAULT_CONFIG, (config: common.CompaitoConfig) => {
-                this.textarea.value = JSON.stringify(config.hosts, null, 2);
-            });
+            chrome.storage.sync.get(
+                common.DEFAULT_CONFIG, (data: common.CompaitoConfigData) => {
+                    this.textarea.value =
+                        (new common.CompaitoConfig(data)).hostConfigJson();
+                }
+            );
         }
     }
 }
