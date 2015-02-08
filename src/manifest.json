@@ -15,5 +15,10 @@
         "https://*/*",
         "tabs",
         "storage"
-    ]
+    ],
+    "icons": {
+        "16":  "img/compaito16.png",
+        "48":  "img/compaito48.png",
+        "128": "img/compaito128.png"
+    }
 }
