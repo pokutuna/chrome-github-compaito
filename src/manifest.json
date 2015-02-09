@@ -13,8 +13,7 @@
     "permissions": [
         "http://*/*",
         "https://*/*",
-        "tabs",
-        "storage"
+        "tabs"
     ],
     "icons": {
         "16":  "img/compaito16.png",
