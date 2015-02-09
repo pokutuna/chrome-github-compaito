@@ -34,31 +34,26 @@ module CompaitoOptions {
 
         onSaveClick(event: MouseEvent) {
             this.validateConfig((config) => {
-                chrome.storage.sync.set(config, () => {
-                    this.saveButton.disabled = true;
-                    this.saveButton.textContent = 'Saved!';
-                });
+                config.save();
+                this.saveButton.disabled = true;
+                this.saveButton.textContent = 'Saved!';
             });
         }
 
-        validateConfig(ok: (data: common.CompaitoConfigData) => void, ng?: () => void) {
+        validateConfig(ok: (config: common.CompaitoConfig) => void, ng?: () => void) {
             var jsonString: string = this.textarea.value;
             var isValid = common.CompaitoConfig.isHostConfigJsonValid(jsonString);
             if (isValid) {
-                ok({ hosts: JSON.parse(jsonString) });
+                ok(new common.CompaitoConfig({ hosts: JSON.parse(jsonString) }));
             } else if (ng) {
                 ng();
             }
         }
 
         restoreConfig() {
-            chrome.storage.sync.get(
-                common.DEFAULT_CONFIG, (data: common.CompaitoConfigData) => {
-                    this.textarea.value =
-                        (new common.CompaitoConfig(data)).hostConfigJson();
-                    this.saveButton.disabled = true;
-                }
-            );
+            var config = common.CompaitoConfig.getConfig();
+            this.textarea.value = config.hostConfigJson();
+            this.saveButton.disabled = true;
         }
     }
 }

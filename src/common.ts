@@ -1,9 +1,5 @@
-export interface CompaitoConfigData {
+interface CompaitoConfigData {
     hosts: { [key:string]: boolean }
-}
-
-export var DEFAULT_CONFIG: CompaitoConfigData  = {
-    hosts: { 'github.com': true }
 }
 
 export class CompaitoConfig {
@@ -21,6 +17,26 @@ export class CompaitoConfig {
 
     hostConfigJson(): string {
         return JSON.stringify(this.data.hosts, null, 2);
+    }
+
+    save() {
+        CompaitoConfig.setConfig(this.data);
+    }
+
+    // statics
+    static DEFAULT_CONFIG: CompaitoConfigData = { hosts: { 'github.com': true } }
+
+    static setConfig(data: CompaitoConfigData) {
+        localStorage.setItem('compaito', JSON.stringify(data))
+    }
+
+    static getConfig(): CompaitoConfig {
+        var data;
+        try {
+            data = JSON.parse(localStorage.getItem('compaito'));
+        } catch(e) {}
+        if (!data) data = CompaitoConfig.DEFAULT_CONFIG;
+        return new CompaitoConfig(data);
     }
 
     static isHostConfigJsonValid(jsonString: string): boolean {
