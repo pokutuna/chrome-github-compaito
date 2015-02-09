@@ -12,30 +12,17 @@ body {
     background-repeat: no-repeat;
 }
 
-h1 {
-    margin-top: 0px;
-    font-size: 2em;
-}
-
-h2 {
-    margin-bottom: 0.3em;
-}
-
-#format {
-    margin-bottom: 2px;
-}
+h1 { margin-top: 0px; }
+h2 { margin-bottom: 0.3em;  }
+#format { margin-bottom: 0.2em; }
 
 textarea {
     font-size: $font-size;
     height: 8em;
     width: 22em;
 }
-
 button {
     font-size: $font-size;
-}
-
-button {
     display: block;
 }
 
