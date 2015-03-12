@@ -14,7 +14,7 @@ Demo
 Install
 ---
 
-WIP
+install from [compaito - Chrome Web Store](https://chrome.google.com/webstore/detail/compaito/bibcmambgkheppahlcghnocnjdbnjlgl)
 
 
 Usage
