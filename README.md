@@ -5,7 +5,11 @@ chrome-github-compaito
 
 __Compaito__ is a chrome extension to jump to [Compare View](https://github.com/blog/612-introducing-github-compare-view) by picking 2 commits.
 
+Demo
+---
+
 ![demo](https://raw.githubusercontent.com/pokutuna/chrome-github-compaito/master/misc/example.gif)
+
 
 Install
 ---
@@ -16,18 +20,18 @@ WIP
 Usage
 ---
 
-- pick and jump
+- __pick and jump__ (click 2 links to a commit)
 
 ![pick and jump demo](https://raw.githubusercontent.com/pokutuna/chrome-github-compaito/master/misc/pick_and_jump.gif)
 
-- pick a previous commit (`{sha1}~`)
+- __pick a previous commit__ (click `~`)
 
 ![pick previous commit demo](https://raw.githubusercontent.com/pokutuna/chrome-github-compaito/master/misc/previous_commit.gif)
 
-- cancel
+- __cancel picking__ (click `x`)
 
 ![cancel demo](https://raw.githubusercontent.com/pokutuna/chrome-github-compaito/master/misc/cancel.gif)
 
-- set hostnames to enable the extension (adaptable to GitHub Enterprise)
+- __set hostnames to enable the extension__ (adaptable to GitHub Enterprise)
 
 ![set hostname demo](https://raw.githubusercontent.com/pokutuna/chrome-github-compaito/master/misc/set_hostname.gif)
