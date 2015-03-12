@@ -19,6 +19,7 @@ module CompaitoContent {
             }
         ));
 
+        window.addEventListener('popstate', () => revPicker.hide());
         document.body.addEventListener('click', (event) => revPicker.hide());
     }
 
