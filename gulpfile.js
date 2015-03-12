@@ -69,7 +69,7 @@ gulp.task('build', ['manifest', 'sass', 'jade', 'img', 'webpack']);
 gulp.task('zip', ['build'], function() {
     return version().then(function(version) {
         return gulp.src('app/**/*')
-            .pipe(zip('Compaito-' + version + '.zip'))
+            .pipe(zip('compaito-' + version + '.zip'))
             .pipe(gulp.dest('releases'));
     });
 });
