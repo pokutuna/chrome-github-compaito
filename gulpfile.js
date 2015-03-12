@@ -4,6 +4,7 @@ var gulp       = require('gulp'),
     sass       = require('gulp-sass'),
     jade       = require('gulp-jade'),
     webpack    = require('gulp-webpack'),
+    zip        = require('gulp-zip'),
     named      = require('vinyl-named'),
     exec       = require('child_process').exec,
     Promise    = require('es6-promise').Promise;
@@ -64,6 +65,14 @@ function version() {
 }
 
 gulp.task('build', ['manifest', 'sass', 'jade', 'img', 'webpack']);
+
+gulp.task('zip', ['build'], function() {
+    return version().then(function(version) {
+        return gulp.src('app/**/*')
+            .pipe(zip('Compaito-' + version + '.zip'))
+            .pipe(gulp.dest('releases'));
+    });
+});
 
 gulp.task('watch', function() {
     gulp.watch('src/manifest.json', ['manifest']);
