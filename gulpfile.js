@@ -1,7 +1,7 @@
 var gulp       = require('gulp'),
     editJson   = require('gulp-json-editor'),
     typescript = require('gulp-typescript'),
-    sass       = require('gulp-sass'),
+    less       = require('gulp-less'),
     jade       = require('gulp-jade'),
     webpack    = require('gulp-webpack'),
     zip        = require('gulp-zip'),
@@ -25,9 +25,9 @@ gulp.task('webpack', ['typescript'], function() {
         .pipe(gulp.dest('app/js'));
 });
 
-gulp.task('sass', function() {
-    return gulp.src('src/**/*.scss')
-        .pipe(sass({ errLogToConsole: true }))
+gulp.task('less', function() {
+    return gulp.src('src/**/*.less')
+        .pipe(less())
         .pipe(gulp.dest('app/css'));
 });
 
@@ -64,7 +64,7 @@ function version() {
     });
 }
 
-gulp.task('build', ['manifest', 'sass', 'jade', 'img', 'webpack']);
+gulp.task('build', ['manifest', 'less', 'jade', 'img', 'webpack']);
 
 gulp.task('zip', ['build'], function() {
     return version().then(function(version) {
@@ -77,6 +77,6 @@ gulp.task('zip', ['build'], function() {
 gulp.task('watch', function() {
     gulp.watch('src/manifest.json', ['manifest']);
     gulp.watch('src/**/*.ts', ['webpack']);
-    gulp.watch('src/**/*.scss', ['sass']);
+    gulp.watch('src/**/*.less', ['less']);
     gulp.watch('src/**/*.jade', ['jade']);
 });
