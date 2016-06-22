@@ -6,13 +6,15 @@
   "devDependencies": {
     "browserify": "^13.0.1",
     "es6-promise": "^2.0.1",
-    "gulp": "^3.8.10",
+    "gulp": "github:gulpjs/gulp#4.0",
     "gulp-jade": "^0.11.0",
     "gulp-json-editor": "^2.2.1",
     "gulp-less": "^3.1.0",
-    "gulp-typescript": "^2.4.2",
     "gulp-zip": "^2.0.3",
-    "vinyl-named": "^1.1.0"
+    "path": "^0.12.7",
+    "tsify": "^0.16.0",
+    "vinyl-named": "^1.1.0",
+    "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {}
 }
