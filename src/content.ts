@@ -145,7 +145,7 @@ module CompaitoContent {
     }
 
     module github {
-        export var commitUrlPattern: RegExp = /\/commit\/([0-9a-f]{40})/;
+        export var commitUrlPattern: RegExp = /\/commits?\/([0-9a-f]{40})/;
         export function isCommitUrlAnchorElement(elem: HTMLElement): boolean {
             var a = <HTMLAnchorElement> elem;
             return a.nodeName === 'A' && commitUrlPattern.test(a.href) && !/#$/.test(a.href)
