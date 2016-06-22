@@ -1,4 +1,4 @@
-/// <reference path="../modules/DefinitelyTyped/chrome/chrome.d.ts" />
+/// <reference path="../typings/index.d.ts" />
 import common = require('./common');
 
 chrome.tabs.onUpdated.addListener(function (tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab) {

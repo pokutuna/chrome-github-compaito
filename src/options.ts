@@ -1,4 +1,4 @@
-/// <reference path="../modules/DefinitelyTyped/chrome/chrome.d.ts" />
+/// <reference path="../typings/index.d.ts" />
 import common = require('./common');
 
 module CompaitoOptions {
