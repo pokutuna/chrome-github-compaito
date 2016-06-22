@@ -1,52 +1,62 @@
 var gulp       = require('gulp'),
+    tsify      = require('tsify'),
+    browserify = require('browserify'),
     editJson   = require('gulp-json-editor'),
-    typescript = require('gulp-typescript'),
-    sass       = require('gulp-sass'),
+    less       = require('gulp-less'),
     jade       = require('gulp-jade'),
-    webpack    = require('gulp-webpack'),
     zip        = require('gulp-zip'),
-    named      = require('vinyl-named'),
+    source     = require('vinyl-source-stream'),
+    path       = require('path'),
     exec       = require('child_process').exec,
     Promise    = require('es6-promise').Promise;
 
-gulp.task('default', ['build', 'watch']);
+var targets = [
+    {
+        name:  'content',
+        entry: './src/content.ts'
+    },
+    {
+        name:  'background',
+        entry: './src/background.ts'
+    },
+    {
+        name:  'options',
+        entry: './src/options.ts'
+    }
+];
+for (let t of targets) {
+    gulp.task(`${t.name}-browserify`, () => {
+        return browserify(t.entry, { debug: true })
+            .plugin('tsify', { noImplititAny: true })
+            .bundle()
+            .pipe(source(path.basename(t.entry).replace(/\.ts$/, '.js')))
+            .pipe(gulp.dest('app/js'));
+    });
+}
+gulp.task('typescript', gulp.parallel(targets.map(t => `${t.name}-browserify`)));
 
-var tsProject = typescript.createProject({ module: 'commonjs', sortOutput: true });
-gulp.task('typescript', function() {
-    return gulp.src('src/**/*.ts')
-        .pipe(typescript(tsProject))
-        .js.pipe(gulp.dest('src/build'));
-});
-
-gulp.task('webpack', ['typescript'], function() {
-    return gulp.src('src/build/*.js')
-        .pipe(named())
-        .pipe(webpack())
-        .pipe(gulp.dest('app/js'));
-});
-
-gulp.task('sass', function() {
-    return gulp.src('src/**/*.scss')
-        .pipe(sass({ errLogToConsole: true }))
+gulp.task('less', () => {
+    return gulp.src('src/**/*.less')
+        .pipe(less())
         .pipe(gulp.dest('app/css'));
 });
 
-gulp.task('jade', function() {
+gulp.task('jade', () => {
     return gulp.src('src/**/*.jade')
         .pipe(jade({ pretty: true }))
         .pipe(gulp.dest('app/html'));
 });
 
-gulp.task('img', function() {
+gulp.task('img', () => {
     return gulp.src('src/img/sized/*.png')
         .pipe(gulp.dest('app/img'));
 });
 
-gulp.task('manifest', function() {
+gulp.task('manifest', () => {
     return version().then(function(version) {
         return gulp.src('src/manifest.json')
-        .pipe(editJson({ version : version }))
-        .pipe(gulp.dest('app/'));
+            .pipe(editJson({ version : version }))
+            .pipe(gulp.dest('app/'));
     });
 });
 function version() {
@@ -64,9 +74,9 @@ function version() {
     });
 }
 
-gulp.task('build', ['manifest', 'sass', 'jade', 'img', 'webpack']);
+gulp.task('build', gulp.parallel(['typescript', 'less', 'jade', 'img', 'manifest']));
 
-gulp.task('zip', ['build'], function() {
+gulp.task('zip', () => {
     return version().then(function(version) {
         return gulp.src('app/**/*')
             .pipe(zip('compaito-' + version + '.zip'))
@@ -74,9 +84,13 @@ gulp.task('zip', ['build'], function() {
     });
 });
 
-gulp.task('watch', function() {
-    gulp.watch('src/manifest.json', ['manifest']);
-    gulp.watch('src/**/*.ts', ['webpack']);
-    gulp.watch('src/**/*.scss', ['sass']);
-    gulp.watch('src/**/*.jade', ['jade']);
+gulp.task('package', gulp.series('build', 'zip'));
+
+gulp.task('watch', () => {
+    gulp.watch('src/**/*.ts',       gulp.parallel(['typescript']));
+    gulp.watch('src/**/*.less',     gulp.parallel(['less']));
+    gulp.watch('src/**/*.jade',     gulp.parallel(['jade']));
+    gulp.watch('src/manifest.json', gulp.parallel(['manifest']));
 });
+
+gulp.task('default', gulp.series('build', 'watch'));
