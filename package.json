@@ -15,7 +15,7 @@
     "karma": "^1.1.0",
     "karma-browserify": "^5.0.5",
     "karma-chai": "^0.1.0",
-    "karma-chrome-launcher": "^1.0.1",
+    "karma-jsdom-launcher": "^3.0.0",
     "karma-mocha": "^1.1.1",
     "mocha": "^2.5.3",
     "path": "^0.12.7",
