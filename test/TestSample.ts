@@ -1,5 +1,5 @@
 /// <reference path="test.d.ts" />
-import { TestSampleTarget, TestSampleWithHtml } from '../src/components/TestSampleTarget';
+import { TestSampleTarget, TestSampleWithHtml } from '../src/components/TestSample';
 
 describe('TestSampleTarget', () => {
     it('returns a greeting text', () => {
@@ -12,7 +12,16 @@ describe('TestSampleTarget', () => {
 });
 
 describe('TestSampleWithHtml', () => {
-    it('add attribute `data-test`', () => {
+    beforeEach(() => {
+        document.body.innerHTML = __html__['test/TestSample.html'];
+    });
 
+    it('add attribute `data-test`', () => {
+        let elem = document.querySelector('.js-test-sample');
+        let view = new TestSampleWithHtml(elem);
+
+        assert.equal(elem.getAttribute('data-test'), null);
+        view.addAttr();
+        assert.equal(elem.getAttribute('data-test'), 'true');
     });
 });
