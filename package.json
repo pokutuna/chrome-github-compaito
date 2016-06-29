@@ -4,6 +4,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "typings": "typings install",
     "test": "karma start --single-run",
     "test-watch": "karma start"
   },
