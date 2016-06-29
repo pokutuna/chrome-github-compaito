@@ -3,6 +3,10 @@
   "author": "pokutuna <popopopopokutuna@gmail.com>",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "test": "karma start --single-run",
+    "test-watch": "karma start"
+  },
   "devDependencies": {
     "browserify": "^13.0.1",
     "chai": "^3.5.0",
