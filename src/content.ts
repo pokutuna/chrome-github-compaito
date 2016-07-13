@@ -8,7 +8,7 @@ module CompaitoContent {
             github.isCommitUrlAnchorElement,
             function(event) {
                 clearTimeout(hideTimer);
-                revPicker.show(event.delegateTarget);
+                revPicker.show(<HTMLElement>event.delegateTarget);
             }
         ));
 
@@ -74,7 +74,7 @@ module CompaitoContent {
         }
 
         updatePickerView(toRev: string = ''): void {
-            var text;
+            var text: string;
             if (this.pickingRevision) {
                 text = github.abbrevRevision(this.pickingRevision) + '...' + github.abbrevRevision(toRev);
                 this.pickButton.classList.add('picking');
@@ -118,7 +118,7 @@ module CompaitoContent {
     }
 
     interface DelegatedEvent extends Event {
-        delegateTarget?: HTMLElement
+        delegateTarget?: EventTarget
     }
     interface LocationHavingOrigin extends Location {
         origin: string // already implemented on Chrome
@@ -126,15 +126,16 @@ module CompaitoContent {
 
     module util {
         export function delegate(
-            match: (HTMLElement) => boolean, listener: (DelegatedEevent) => void
-        ): (Event) => void {
+            match: (elem: EventTarget) => boolean,
+            listener: (dev: DelegatedEvent) => void
+        ): (ev: Event) => void {
             return function(event) {
                 var el = event.target;
                 do {
                     if (!match(el)) continue;
-                    event.delegateTarget = el;
+                    (<DelegatedEvent>event).delegateTarget = el;
                     listener.apply(this, arguments);
-                } while (el = el.parentNode);
+                } while (el = (<Node>el).parentNode);
             }
         }
 
@@ -156,7 +157,7 @@ module CompaitoContent {
             var match = url.match(commitUrlPattern);
             return match[1];
         }
-        export function constructCompareViewURL(fromRev, toRev: string): string {
+        export function constructCompareViewURL(fromRev: string, toRev: string): string {
             var loc = <LocationHavingOrigin> location;
             var diffArg = [fromRev, toRev].join('...');
             var pattern: RegExp = /\/([^\/]+)\/([^\/]+)(\/.*)?/;

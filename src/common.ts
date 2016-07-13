@@ -31,7 +31,7 @@ export class CompaitoConfig {
     }
 
     static getConfig(): CompaitoConfig {
-        var data;
+        var data: CompaitoConfigData;
         try {
             data = JSON.parse(localStorage.getItem('compaito'));
         } catch(e) {}
