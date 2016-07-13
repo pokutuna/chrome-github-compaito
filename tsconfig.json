@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "ES5",
+
+        "forceConsistentCasingInFileNames": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "rootDir": "src"
+    },
+    "compileOnSave": false,
+    "exclude": [ "node_modules" ]
+}
