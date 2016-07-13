@@ -23,6 +23,7 @@
     "karma-html2js-preprocessor": "^1.0.0",
     "karma-jsdom-launcher": "^3.0.0",
     "karma-mocha": "^1.1.1",
+    "karma-mocha-reporter": "^2.0.4",
     "mocha": "^2.5.3",
     "path": "^0.12.7",
     "tsify": "^0.16.0",
