@@ -117,12 +117,6 @@ module CompaitoContent {
         }
     }
 
-    interface DelegatedEvent extends Event {
-        delegateTarget?: EventTarget
-    }
-    interface LocationHavingOrigin extends Location {
-        origin: string // already implemented on Chrome
-    }
 
     module github {
         export var commitUrlPattern: RegExp = /\/commits?\/([0-9a-f]{40})/;
@@ -137,7 +131,7 @@ module CompaitoContent {
             return match[1];
         }
         export function constructCompareViewURL(fromRev: string, toRev: string): string {
-            var loc = <LocationHavingOrigin> location;
+            var loc = location;
             var diffArg = [fromRev, toRev].join('...');
             var pattern: RegExp = /\/([^\/]+)\/([^\/]+)(\/.*)?/;
             var match = loc.pathname.match(pattern);
