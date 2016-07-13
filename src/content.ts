@@ -1,23 +1,23 @@
+import { Util } from './components/Util';
+
 module CompaitoContent {
 
     export function init(): void {
         var revPicker = new RevisionPickClicker();
         var hideTimer: number;
 
-        document.body.addEventListener('mouseover', util.delegate(
-            github.isCommitUrlAnchorElement,
-            function(event) {
-                clearTimeout(hideTimer);
-                revPicker.show(<HTMLElement>event.delegateTarget);
-            }
-        ));
+        document.body.addEventListener('mouseover', Util.delegate('a', (event) => {
+            let target = <HTMLElement>event.target;
+            if (!github.isCommitUrlAnchorElement(target)) return;
+            clearTimeout(hideTimer);
+            revPicker.show(target);
+        }));
 
-        document.body.addEventListener('mouseout', util.delegate(
-            github.isCommitUrlAnchorElement,
-            function(event) {
-                hideTimer = setTimeout(() => { revPicker.hide() }, 100);
-            }
-        ));
+        document.body.addEventListener('mouseout', Util.delegate('a', (event) => {
+            let target = <HTMLElement>event.target;
+            if (!github.isCommitUrlAnchorElement(target)) return;
+            hideTimer = setTimeout(() => { revPicker.hide() }, 100);
+        }));
 
         window.addEventListener('popstate', () => revPicker.hide());
         document.body.addEventListener('click', (event) => revPicker.hide());
@@ -35,19 +35,19 @@ module CompaitoContent {
 
         constructor() {
             this.container = document.createElement('div');
-            util.addClasses(this.container, ['container', 'none']);
+            Util.addClasses(this.container, ['container', 'none']);
 
             this.pickButton = document.createElement('button');
             this.pickButton.addEventListener('click', (e) => this.onPickClick(e));
-            util.addClasses(this.pickButton, ['pick-button']);
+            Util.addClasses(this.pickButton, ['pick-button']);
 
             this.pickPrevButton = document.createElement('button');
             this.pickPrevButton.addEventListener('click', (e) => this.onPickPrevClick(e));
-            util.addClasses(this.pickPrevButton, ['pick-prev-button']);
+            Util.addClasses(this.pickPrevButton, ['pick-prev-button']);
 
             this.cancelButton = document.createElement('button');
             this.cancelButton.addEventListener('click', (e) => this.onCancelClick(e));
-            util.addClasses(this.cancelButton, ['cancel-button', 'none']);
+            Util.addClasses(this.cancelButton, ['cancel-button', 'none']);
 
             this.container.appendChild(this.pickButton);
             this.container.appendChild(this.pickPrevButton);
@@ -122,27 +122,6 @@ module CompaitoContent {
     }
     interface LocationHavingOrigin extends Location {
         origin: string // already implemented on Chrome
-    }
-
-    module util {
-        export function delegate(
-            match: (elem: EventTarget) => boolean,
-            listener: (dev: DelegatedEvent) => void
-        ): (ev: Event) => void {
-            return function(event) {
-                var el = event.target;
-                do {
-                    if (!match(el)) continue;
-                    (<DelegatedEvent>event).delegateTarget = el;
-                    listener.apply(this, arguments);
-                } while (el = (<Node>el).parentNode);
-            }
-        }
-
-        export function addClasses(elem: HTMLElement, classes: string[]): void {
-            elem.classList.add('chrome-extension-compaito');
-            classes.forEach((c: string) => elem.classList.add(c));
-        }
     }
 
     module github {
