@@ -1,14 +1,49 @@
 var gulp       = require('gulp'),
-    tsify      = require('tsify'),
     browserify = require('browserify'),
+    watchify   = require('watchify'),
+    tsify      = require('tsify'),
     editJson   = require('gulp-json-editor'),
     less       = require('gulp-less'),
     jade       = require('gulp-jade'),
     zip        = require('gulp-zip'),
+    logger     = require('gulp-logger'),
+    gutil      = require('gulp-util'),
     source     = require('vinyl-source-stream'),
     path       = require('path'),
     exec       = require('child_process').exec,
     Promise    = require('es6-promise').Promise;
+
+function buildScript(file, watch) {
+    let bundler = browserify({
+        entries: file,
+        debug: true,
+        plugin: watch ? [watchify, tsify] : [tsify],
+        cache: {}, packageCache: {}
+    });
+
+    function rebundle() {
+        return bundler
+            .bundle()
+            .on('error', function(error) {
+                gutil.log(error.toString());
+                this.emit('end');
+            })
+            .pipe(source(path.basename(file).replace(/\.ts$/, '.js')))
+            .pipe(gulp.dest('app/js'))
+            .pipe(logger({ before: 'wrote: ' }));
+    }
+
+    bundler.on('update', function() {
+        console.log(arguments);
+        console.log(bundler._options.cache);
+        // TODO
+        // 依存含まれているやつなら更新したい
+        // tsify を transform してみる
+        rebundle();
+    });
+
+    return rebundle();
+}
 
 var targets = [
     {
@@ -25,15 +60,11 @@ var targets = [
     }
 ];
 for (let t of targets) {
-    gulp.task(`${t.name}-browserify`, () => {
-        return browserify(t.entry, { debug: true })
-            .plugin('tsify', { noImplititAny: true })
-            .bundle()
-            .pipe(source(path.basename(t.entry).replace(/\.ts$/, '.js')))
-            .pipe(gulp.dest('app/js'));
-    });
+    gulp.task(`${t.name}-browserify`, () => { return buildScript(t.entry, false); });
+    gulp.task(`${t.name}-watchify`,   () => { return buildScript(t.entry, true);  });
 }
 gulp.task('typescript', gulp.parallel(targets.map(t => `${t.name}-browserify`)));
+gulp.task('typescript:watch', gulp.parallel(targets.map(t => `${t.name}-watchify`)));
 
 gulp.task('less', () => {
     return gulp.src('src/**/*.less')
