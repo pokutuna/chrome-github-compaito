@@ -1,6 +1,4 @@
 class GitHub {
-    static commitUrlPattern: RegExp = /\/commits?\/([0-9a-f]{40})/;
-
     static isCommitUrlAnchorElement(elem: HTMLElement): boolean {
         const a = <HTMLAnchorElement> elem;
         return a.nodeName === 'A' &&
