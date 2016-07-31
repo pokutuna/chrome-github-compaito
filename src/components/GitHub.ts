@@ -16,7 +16,7 @@ class GitHub {
     }
 }
 
-class Commit {
+class CommitURL {
     url: string;
     isRefParent: boolean
 
@@ -36,6 +36,10 @@ class Commit {
             ? revision.substring(0, 7)
             : revision.substring(0, 6) + '~';
     }
+
+    get isInPullRequest(): boolean {
+        return false; // TODO
+    }
 }
 
-export { GitHub, Commit };
+export { GitHub, CommitURL };
