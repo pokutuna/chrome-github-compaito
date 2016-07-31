@@ -1,4 +1,5 @@
-import { Util } from './components/Util';
+import { Util }           from './components/Util';
+import { GitHub, Commit } from './components/GitHub';
 
 module CompaitoContent {
 
@@ -8,14 +9,14 @@ module CompaitoContent {
 
         document.body.addEventListener('mouseover', Util.delegate('a', (event) => {
             let target = <HTMLElement>event.target;
-            if (!github.isCommitUrlAnchorElement(target)) return;
+            if (!GitHub.isCommitUrlAnchorElement(target)) return;
             clearTimeout(hideTimer);
             revPicker.show(target);
         }));
 
         document.body.addEventListener('mouseout', Util.delegate('a', (event) => {
             let target = <HTMLElement>event.target;
-            if (!github.isCommitUrlAnchorElement(target)) return;
+            if (!GitHub.isCommitUrlAnchorElement(target)) return;
             hideTimer = setTimeout(() => { revPicker.hide() }, 100);
         }));
 
@@ -59,7 +60,7 @@ module CompaitoContent {
         stick(elem: HTMLElement) {
             var anchor = <HTMLAnchorElement>elem;
             this.stickingElem     = anchor;
-            this.stickingRevision = github.extractRevision(anchor.href);
+            this.stickingRevision = (new Commit(anchor.href)).revision;
 
             var rect = this.stickingElem.getBoundingClientRect();
             this.container.style.top  =
@@ -76,7 +77,7 @@ module CompaitoContent {
         updatePickerView(toRev: string = ''): void {
             var text: string;
             if (this.pickingRevision) {
-                text = github.abbrevRevision(this.pickingRevision) + '...' + github.abbrevRevision(toRev);
+                text = 'fixTo' + '...' + 'fixFrom';
                 this.pickButton.classList.add('picking');
                 this.pickPrevButton.classList.add('none');
                 this.cancelButton.classList.remove('none');
@@ -101,7 +102,7 @@ module CompaitoContent {
 
         onPickClick(event: MouseEvent) {
             if (this.pickingRevision) {
-                window.open(github.constructCompareViewURL(this.pickingRevision, this.stickingRevision));
+                window.open(GitHub.constructCompareViewUrl(this.pickingRevision, this.stickingRevision));
                 this.setPickingRevision('');
             } else {
                 this.setPickingRevision(this.stickingRevision);
@@ -114,32 +115,6 @@ module CompaitoContent {
 
         onCancelClick(event: MouseEvent) {
             this.setPickingRevision('');
-        }
-    }
-
-
-    module github {
-        export var commitUrlPattern: RegExp = /\/commits?\/([0-9a-f]{40})/;
-        export function isCommitUrlAnchorElement(elem: HTMLElement): boolean {
-            var a = <HTMLAnchorElement> elem;
-            return a.nodeName === 'A' && commitUrlPattern.test(a.href) && !/#$/.test(a.href)
-                ? true : false;
-        }
-
-        export function extractRevision(url: string): string {
-            var match = url.match(commitUrlPattern);
-            return match[1];
-        }
-        export function constructCompareViewURL(fromRev: string, toRev: string): string {
-            var loc = location;
-            var diffArg = [fromRev, toRev].join('...');
-            var pattern: RegExp = /\/([^\/]+)\/([^\/]+)(\/.*)?/;
-            var match = loc.pathname.match(pattern);
-            return [loc.origin, match[1], match[2], 'compare', diffArg].join('/');
-        }
-        export function abbrevRevision(revision: string): string {
-            var isPrev = /~$/.test(revision);
-            return !isPrev ? revision.substring(0, 7) : revision.substring(0, 6) + '~';
         }
     }
 }
