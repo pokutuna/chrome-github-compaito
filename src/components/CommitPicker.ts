@@ -92,9 +92,9 @@ class CommitPickerView extends View implements ICommitPickerView {
         this.cancel     = document.createElement('a');
 
         Util.addClasses(this.container,  ['container', 'none']);
-        Util.addClasses(this.pick,       ['pick-button']);
-        Util.addClasses(this.pickParent, ['pick-prev-button']);
-        Util.addClasses(this.cancel,     ['cancel-button']);
+        Util.addClasses(this.pick,       ['pick']);
+        Util.addClasses(this.pickParent, ['pick-prev']);
+        Util.addClasses(this.cancel,     ['cancel']);
 
         [this.pick, this.pickParent, this.cancel].forEach((e) => this.container.appendChild(e));
         this.body.appendChild(this.container);
