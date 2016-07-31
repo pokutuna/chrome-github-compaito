@@ -49,8 +49,7 @@ class CommitPickerPresenter extends Presenter {
     }
 
     handleMouseOut(): void {
-        this.visible = false;
-        this.view.updatePicker();
+        this._hide();
     }
 
     handlePick(isParent: boolean) : void {
@@ -64,6 +63,15 @@ class CommitPickerPresenter extends Presenter {
 
     handleCancel(): void {
         this.fromCommit = null;
+        this.view.updatePicker();
+    }
+
+    handlePageChange(): void {
+        this._hide();
+    }
+
+    _hide(): void {
+        this.visible = false;
         this.view.updatePicker();
     }
 }
@@ -115,6 +123,9 @@ class CommitPickerView extends View implements ICommitPickerView {
         this.pick.addEventListener('click', this.onClickPick.bind(this));
         this.pickParent.addEventListener('click', this.onClickPickParent.bind(this));
         this.cancel.addEventListener('click', this.onClickCancel.bind(this));
+
+        // hide picker on pagechange with pjax
+        document.addEventListener('pjax:start', this.onPageChange.bind(this));
     }
 
     private onAnchorMouseOver(event: Event): void {
@@ -141,6 +152,10 @@ class CommitPickerView extends View implements ICommitPickerView {
     private onClickCancel(event: Event): void {
         event.preventDefault();
         this.presenter.handleCancel();
+    }
+
+    private onPageChange(event: Event): void {
+        this.presenter.handlePageChange();
     }
 
     updatePicker(anchor?: HTMLAnchorElement): void {
