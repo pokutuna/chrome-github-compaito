@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "build": "gulp build",
+    "watch": "gulp watch",
     "test": "karma start --single-run",
     "test-watch": "karma start",
     "typings": "typings install"

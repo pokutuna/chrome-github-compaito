@@ -136,11 +136,10 @@ gulp.task('zip', () => {
 
 gulp.task('package', gulp.series('build', 'zip'));
 
-gulp.task('watch', () => {
-    gulp.watch('src/**/*.ts',       gulp.parallel(['typescript']));
+gulp.task('watch', gulp.parallel(['typescript:watch', () => {
     gulp.watch('src/**/*.less',     gulp.parallel(['less']));
     gulp.watch('src/**/*.jade',     gulp.parallel(['jade']));
     gulp.watch('src/manifest.json', gulp.parallel(['manifest']));
-});
+}]));
 
 gulp.task('default', gulp.series('build', 'watch'));
