@@ -10,6 +10,7 @@ var gulp       = require('gulp'),
     gutil      = require('gulp-util'),
     source     = require('vinyl-source-stream'),
     path       = require('path'),
+    through    = require('through2'),
     exec       = require('child_process').exec,
     Promise    = require('es6-promise').Promise;
 
@@ -17,7 +18,7 @@ function buildScript(file, watch) {
     let bundler = browserify({
         entries: file,
         debug: true,
-        plugin: watch ? [watchify, tsify] : [tsify],
+        plugin: [tsify],
         cache: {}, packageCache: {}
     });
 
@@ -30,17 +31,31 @@ function buildScript(file, watch) {
             })
             .pipe(source(path.basename(file).replace(/\.ts$/, '.js')))
             .pipe(gulp.dest('app/js'))
-            .pipe(logger({ before: 'wrote: ' }));
+            .pipe(logger({ beforeEach: '[ts] wrote: ' }));
     }
 
-    bundler.on('update', function() {
-        console.log(arguments);
-        console.log(bundler._options.cache);
-        // TODO
-        // 依存含まれているやつなら更新したい
-        // tsify を transform してみる
-        rebundle();
-    });
+    // watchify を有効にする
+    if (watch) {
+        bundler.plugin(watchify);
+
+        // watchify は file イベントによって追加されたファイルの更新をすべて通知してしまう
+        // entry が依存しているファイルの更新のみを検知して再生成したいのでここで依存を集める
+        let deps = {};
+        function collectDeps() {
+            bundler.pipeline.get('deps').push(through.obj(function (row, enc, next) {
+                let file = row.expose ? bundler._expose[row.id] : row.file;
+                deps[file] = true;
+                this.push(row);
+                next();
+            }));
+        }
+        bundler.on('reset', collectDeps);
+        collectDeps();
+
+        bundler.on('update', function(files) {
+            if (files.some((file) => { return deps[file]; })) rebundle();
+        });
+    }
 
     return rebundle();
 }
@@ -69,25 +84,29 @@ gulp.task('typescript:watch', gulp.parallel(targets.map(t => `${t.name}-watchify
 gulp.task('less', () => {
     return gulp.src('src/**/*.less')
         .pipe(less())
-        .pipe(gulp.dest('app/css'));
+        .pipe(gulp.dest('app/css'))
+        .pipe(logger({ beforeEach: '[less] wrote: ' }));
 });
 
 gulp.task('jade', () => {
     return gulp.src('src/**/*.jade')
         .pipe(jade({ pretty: true }))
-        .pipe(gulp.dest('app/html'));
+        .pipe(gulp.dest('app/html'))
+        .pipe(logger({ beforeEach: '[jade] wrote: ' }));
 });
 
 gulp.task('img', () => {
     return gulp.src('src/img/sized/*.png')
-        .pipe(gulp.dest('app/img'));
+        .pipe(gulp.dest('app/img'))
+        .pipe(logger({ beforeEach: '[img] wrote: ' }));
 });
 
 gulp.task('manifest', () => {
     return version().then(function(version) {
         return gulp.src('src/manifest.json')
             .pipe(editJson({ version : version }))
-            .pipe(gulp.dest('app/'));
+            .pipe(gulp.dest('app/'))
+            .pipe(logger({ beforeEach: '[manifest] wrote: ' }));
     });
 });
 function version() {
