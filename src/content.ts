@@ -1,3 +1,5 @@
 import { CommitPickerView } from './components/CommitPicker';
 
-new CommitPickerView(<HTMLBodyElement>document.body);
+// guard duplicate picker
+if (!document.querySelector('.chrome-extension-compaito'))
+    new CommitPickerView(<HTMLBodyElement>document.body);

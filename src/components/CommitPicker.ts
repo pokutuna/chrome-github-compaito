@@ -54,7 +54,8 @@ class CommitPickerPresenter extends Presenter {
 
     handlePick(isParent: boolean) : void {
         if (this.isPicking) {
-            this.fromCommit = null // reset on opening compare view
+            // deley to reset after opening compare view
+            setTimeout(() => { this.fromCommit = null }, 1);
         } else {
             this.fromCommit = new CommitURL(this.hoveringCommit.url, isParent);
         }
