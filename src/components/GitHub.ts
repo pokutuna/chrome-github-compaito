@@ -22,8 +22,8 @@ class CommitURL {
     get abbrevRevision(): string {
         const revision = this.revision;
         return this.isRefParent
-            ? revision.substring(0, 7)
-            : revision.substring(0, 6) + '~';
+            ? revision.substring(0, 6) + '~'
+            : revision.substring(0, 7);
     }
 
     get isInPullRequest(): boolean {
