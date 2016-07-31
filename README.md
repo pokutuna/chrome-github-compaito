@@ -3,7 +3,7 @@ chrome-github-compaito
 
 [![Build Status](https://travis-ci.org/pokutuna/chrome-github-compaito.svg?branch=master)](https://travis-ci.org/pokutuna/chrome-github-compaito)
 
-![icon](https://raw.githubusercontent.com/pokutuna/chrome-github-compaito/master/src/img/compaito_clipped_h100.png)
+![icon](https://raw.githubusercontent.com/pokutuna/chrome-github-compaito/master/src/img/compaito_clipped.png)
 
 __compaito__ is a chrome extension to jump to [Compare View](https://github.com/blog/612-introducing-github-compare-view) by picking 2 commits.
 

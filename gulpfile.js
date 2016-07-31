@@ -4,7 +4,7 @@ var gulp       = require('gulp'),
     tsify      = require('tsify'),
     editJson   = require('gulp-json-editor'),
     less       = require('gulp-less'),
-    jade       = require('gulp-jade'),
+    pug        = require('gulp-pug'),
     zip        = require('gulp-zip'),
     logger     = require('gulp-logger'),
     gutil      = require('gulp-util'),
@@ -88,11 +88,11 @@ gulp.task('less', () => {
         .pipe(logger({ beforeEach: '[less] wrote: ' }));
 });
 
-gulp.task('jade', () => {
-    return gulp.src('src/**/*.jade')
-        .pipe(jade({ pretty: true }))
+gulp.task('pug', () => {
+    return gulp.src('src/**/*.pug')
+        .pipe(pug({ pretty: true }))
         .pipe(gulp.dest('app/html'))
-        .pipe(logger({ beforeEach: '[jade] wrote: ' }));
+        .pipe(logger({ beforeEach: '[pug] wrote: ' }));
 });
 
 gulp.task('img', () => {
@@ -124,7 +124,7 @@ function version() {
     });
 }
 
-gulp.task('build', gulp.parallel(['typescript', 'less', 'jade', 'img', 'manifest']));
+gulp.task('build', gulp.parallel(['typescript', 'less', 'pug', 'img', 'manifest']));
 
 gulp.task('zip', () => {
     return version().then(function(version) {
@@ -136,11 +136,10 @@ gulp.task('zip', () => {
 
 gulp.task('package', gulp.series('build', 'zip'));
 
-gulp.task('watch', () => {
-    gulp.watch('src/**/*.ts',       gulp.parallel(['typescript']));
+gulp.task('watch', gulp.parallel(['typescript:watch', () => {
     gulp.watch('src/**/*.less',     gulp.parallel(['less']));
-    gulp.watch('src/**/*.jade',     gulp.parallel(['jade']));
+    gulp.watch('src/**/*.pug',      gulp.parallel(['pug']));
     gulp.watch('src/manifest.json', gulp.parallel(['manifest']));
-});
+}]));
 
 gulp.task('default', gulp.series('build', 'watch'));

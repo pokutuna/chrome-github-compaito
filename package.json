@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "build": "gulp build",
+    "watch": "gulp watch",
     "test": "karma start --single-run",
     "test-watch": "karma start",
     "typings": "typings install"
@@ -14,11 +15,11 @@
     "chai": "^3.5.0",
     "es6-promise": "^2.0.1",
     "gulp": "github:gulpjs/gulp#4.0",
-    "gulp-jade": "^0.11.0",
     "gulp-json-editor": "^2.2.1",
     "gulp-less": "^3.1.0",
     "gulp-logger": "0.0.2",
     "gulp-notify": "^2.2.0",
+    "gulp-pug": "^3.0.3",
     "gulp-util": "^3.0.7",
     "gulp-zip": "^2.0.3",
     "karma": "^1.1.0",
