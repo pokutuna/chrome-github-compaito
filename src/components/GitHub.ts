@@ -40,6 +40,8 @@ class CommitURL {
     get isInPullRequest(): boolean {
         return false; // TODO
     }
+
+    static pattern: RegExp = /\/commits?\/([0-9a-f]{40})/;
 }
 
 export { GitHub, CommitURL };
