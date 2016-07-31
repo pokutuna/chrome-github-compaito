@@ -17,6 +17,10 @@ abstract class Presenter {
         this.lastError = error;
         this.view.updateError();
     }
+
+    resetError(): void {
+        this.setError(null);
+    }
 }
 
 abstract class View implements IView {
@@ -30,10 +34,9 @@ abstract class View implements IView {
     }
 
     initMembers(...args: any[]): void {}
-    createPresenter(): Presenter {
-        throw new Error('You must implement createPresenter');
-    }
+    abstract createPresenter(): Presenter;
     registerEvents(): void {}
+
     updateError(): void {}
 }
 
