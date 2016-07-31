@@ -1,6 +1,6 @@
 import { IView, Presenter, View } from './base';
 import { Util } from './Util';
-import { CommitURL } from './GitHub';
+import { CommitURL } from './CommitURL';
 
 interface ICommitPickerView extends IView {
     updatePicker(anchor?: HTMLAnchorElement): void;
