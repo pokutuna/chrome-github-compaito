@@ -3,9 +3,7 @@ import { Util } from './Util';
 import { CommitURL } from './GitHub';
 
 interface ICommitPickerView extends IView {
-    updatePicker(): void;
-    showPicker(anchor: HTMLAnchorElement): void;
-    hidePicker(): void;
+    updatePicker(anchor?: HTMLAnchorElement): void;
 }
 
 class CommitPickerPresenter extends Presenter {
@@ -14,10 +12,17 @@ class CommitPickerPresenter extends Presenter {
     hoveringCommit: CommitURL;
     fromCommit: CommitURL;
 
+    visible: boolean;
+
     constructor(view: ICommitPickerView) {
         super(view);
         this.hoveringCommit = null;
         this.fromCommit = null;
+        this.visible = false;
+    }
+
+    setup(): void {
+        this.view.updatePicker();
     }
 
     get isPicking(): boolean {
@@ -38,17 +43,20 @@ class CommitPickerPresenter extends Presenter {
 
     handleMouseOver(url: string, anchor: HTMLAnchorElement): void {
         if (!CommitURL.isCommitURLString(url)) return;
+        this.visible = true;
         this.hoveringCommit = new CommitURL(url);
-        this.view.updatePicker();
-        this.view.showPicker(anchor);
+        this.view.updatePicker(anchor);
     }
 
-    handleMouseOut(url: string): void {
-        this.view.hidePicker();
+    handleMouseOut(): void {
+        this.visible = false;
+        this.view.updatePicker();
     }
 
     handlePick(isParent: boolean) : void {
-        if (!this.isPicking) {
+        if (this.isPicking) {
+            this.fromCommit = null // reset on opening compare view
+        } else {
             this.fromCommit = new CommitURL(this.hoveringCommit.url, isParent);
         }
         this.view.updatePicker();
@@ -117,7 +125,7 @@ class CommitPickerView extends View implements ICommitPickerView {
 
     private onAnchorMouseOut(event: Event): void {
         if ((<HTMLElement>event.target).nodeName !== 'A') return;
-        this.presenter.handleMouseOut((<HTMLAnchorElement>event.target).href);
+        this.presenter.handleMouseOut();
     }
 
     private onClickPick(event: Event): void {
@@ -135,26 +143,22 @@ class CommitPickerView extends View implements ICommitPickerView {
         this.presenter.handleCancel();
     }
 
-    updatePicker(): void {
+    updatePicker(anchor?: HTMLAnchorElement): void {
         this.pick.text = this.presenter.pickText;
         this.pick.href = this.presenter.pickHref;
 
-        const isPicking = this.presenter.isPicking;
-        this.pick.classList.toggle('picking', isPicking);
-        this.pickParent.classList.toggle('none', isPicking);
-        this.cancel.classList.toggle('none', !isPicking);
-    }
+        if (anchor) {
+            const rect = anchor.getBoundingClientRect();
+            // pull up padding-top
+            this.container.style.top  = (window.pageYOffset + rect.top   -  2) + 'px';
+            // slide balloon arrow width
+            this.container.style.left = (window.pageXOffset + rect.right + 10) + 'px';
+        }
 
-    showPicker(anchor: HTMLAnchorElement): void {
-        const rect = anchor.getBoundingClientRect();
-        this.container.style.top  = (window.pageYOffset + rect.top   -  2) + 'px';
-        this.container.style.left = (window.pageXOffset + rect.right + 10) + 'px';
-
-        this.container.classList.remove('none');
-    }
-
-    hidePicker(): void {
-        this.container.classList.add('none');
+        this.pick.classList.toggle('picking', this.presenter.isPicking);
+        this.pickParent.classList.toggle('none', this.presenter.isPicking);
+        this.cancel.classList.toggle('none', !this.presenter.isPicking);
+        this.container.classList.toggle('none', !this.presenter.visible);
     }
 }
 

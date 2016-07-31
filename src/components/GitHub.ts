@@ -16,7 +16,7 @@ class CommitURL {
 
     get revision(): string {
         const match = this.url.match(CommitURL.pattern);
-        return this.isRefParent ? match[1] : match[1] + '~';
+        return this.isRefParent ? match[1] + '~' : match[1];
     }
 
     get abbrevRevision(): string {
@@ -36,10 +36,6 @@ class CommitURL {
 
     get repo(): string {
         return this._parts[4];
-    }
-
-    get issue(): string {
-        return this._parts[6];
     }
 
     static pattern: RegExp = /\/commits?\/([0-9a-f]{40})/;
