@@ -71,6 +71,12 @@ module.exports = function(config) {
     // how many browser should be started simultaneous
     concurrency: Infinity,
 
+    client: {
+      mocha: {
+        require: [require.resolve('mock-local-storage')]
+      }
+    },
+
     browserify: {
       extensions: ['.ts'],
       plugin: ['tsify'],
