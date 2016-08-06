@@ -54,7 +54,7 @@ class CompaitoConfig {
     }
 
     static isHostsValid(hosts: any): boolean {
-        if (typeof hosts !== 'object') return false;
+        if (!hosts || typeof hosts !== 'object') return false;
         return Object.keys(hosts).every((key) => {
             return typeof hosts[key] === 'boolean';
         });
