@@ -6,6 +6,7 @@
   "scripts": {
     "build": "gulp build",
     "watch": "gulp watch",
+    "package": "gulp package",
     "test": "karma start --single-run",
     "test-watch": "karma start",
     "typings": "typings install"
