@@ -10,16 +10,15 @@ var gulp       = require('gulp'),
     gutil      = require('gulp-util'),
     source     = require('vinyl-source-stream'),
     path       = require('path'),
-    through    = require('through2'),
     exec       = require('child_process').exec,
     Promise    = require('es6-promise').Promise;
 
-function buildScript(file, watch) {
+function buildScript(entry, watch) {
     let bundler = browserify({
-        entries: file,
+        entries: entry,
         debug: true,
         plugin: [tsify],
-        cache: {}, packageCache: {}
+        cache: {}, packageCache: {} // for watchify
     });
 
     function rebundle() {
@@ -29,32 +28,29 @@ function buildScript(file, watch) {
                 gutil.log(error.toString());
                 this.emit('end');
             })
-            .pipe(source(path.basename(file).replace(/\.ts$/, '.js')))
+            .pipe(source(path.basename(entry).replace(/\.ts$/, '.js')))
             .pipe(gulp.dest('app/js'))
             .pipe(logger({ beforeEach: '[ts] wrote: ' }));
     }
 
     // watchify を有効にする
     if (watch) {
-        bundler.plugin(watchify);
-
-        // watchify は file イベントによって追加されたファイルの更新をすべて通知してしまう
-        // entry が依存しているファイルの更新のみを検知して再生成したいのでここで依存を集める
+        // watchify は file イベントによって追加されたファイルの更新をすべて update イベントで
+        // 通知してしまう。 entry の依存に含まれるファイルの更新のみを検知して再生成したいため、
+        // watchify が内部で検出している依存関係を proxy して依存の有無を判定できるようにする。
         let deps = {};
-        function collectDeps() {
-            bundler.pipeline.get('deps').push(through.obj(function (row, enc, next) {
-                let file = row.expose ? bundler._expose[row.id] : row.file;
+        bundler._options.cache = new Proxy(bundler._options.cache, {
+            set: (cache, file, dep) => {
+                cache[file] = dep;
                 deps[file] = true;
-                this.push(row);
-                next();
-            }));
-        }
-        bundler.on('reset', collectDeps);
-        collectDeps();
-
-        bundler.on('update', function(files) {
+            }
+        });
+        bundler.on('reset', () => { deps = {}; });
+        bundler.on('update', (files) => {
             if (files.some((file) => { return deps[file]; })) rebundle();
         });
+
+        bundler.plugin(watchify);
     }
 
     return rebundle();
