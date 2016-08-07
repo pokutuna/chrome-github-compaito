@@ -10,7 +10,7 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['mocha', 'browserify', 'chai'],
+    frameworks: ['mocha', 'browserify', 'chai', 'sinon'],
 
 
     // list of files / patterns to load in the browser
@@ -70,6 +70,12 @@ module.exports = function(config) {
     // Concurrency level
     // how many browser should be started simultaneous
     concurrency: Infinity,
+
+    client: {
+      mocha: {
+        require: [require.resolve('mock-local-storage')]
+      }
+    },
 
     browserify: {
       extensions: ['.ts'],

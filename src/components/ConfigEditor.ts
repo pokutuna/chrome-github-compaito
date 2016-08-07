@@ -2,7 +2,7 @@ import { IView, Presenter, View } from './base';
 import { CompaitoConfig } from './CompaitoConfig';
 
 interface IConfigEditorView extends IView {
-    restoreHostConfigJson(json: string): void;
+    restoreHostConfigJson(): void;
     updateButton(): void;
 }
 
@@ -23,9 +23,7 @@ class ConfigEditorPresenter extends Presenter {
     }
 
     setup(): void {
-        this.view.restoreHostConfigJson(
-            JSON.stringify(this.config.getHosts(), null, 2)
-        );
+        this.view.restoreHostConfigJson();
         this.view.updateButton();
     }
 
@@ -35,6 +33,10 @@ class ConfigEditorPresenter extends Presenter {
 
     get isSaveButtonEnable(): boolean {
         return this.hasDiff && this.isHostConfigValid ? true : false;
+    }
+
+    get hostsJson(): string {
+        return JSON.stringify(this.config.getHosts(), null, 2);
     }
 
     handleHostConfigInput(json: string): void {
@@ -86,8 +88,8 @@ class ConfigEditorView extends View implements IConfigEditorView {
         });
     }
 
-    restoreHostConfigJson(json: string): void {
-        this.textarea.value = json;
+    restoreHostConfigJson(): void {
+        this.textarea.value = this.presenter.hostsJson;
     }
 
     updateButton(): void {

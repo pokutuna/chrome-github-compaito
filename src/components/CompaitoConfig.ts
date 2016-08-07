@@ -34,13 +34,17 @@ class CompaitoConfig {
     }
 
     // statics
-    static DEFAULT_CONFIG: CompaitoConfigData = { hosts: { 'github.com': true } };
+    static get DEFAULT_CONFIG(): CompaitoConfigData {
+        return { hosts: { 'github.com': true } };
+    }
 
     static getConfig(): CompaitoConfig {
         let data: CompaitoConfigData;
         try {
             data = JSON.parse(localStorage.getItem('compaito'))
-        } catch(e) {};
+        } catch(e) {
+            console.error(e.toString());
+        };
         if (!data) data = CompaitoConfig.DEFAULT_CONFIG;
         return new CompaitoConfig(data);
     }
@@ -50,7 +54,7 @@ class CompaitoConfig {
     }
 
     static isHostsValid(hosts: any): boolean {
-        if (typeof hosts !== 'object') return false;
+        if (!hosts || typeof hosts !== 'object') return false;
         return Object.keys(hosts).every((key) => {
             return typeof hosts[key] === 'boolean';
         });

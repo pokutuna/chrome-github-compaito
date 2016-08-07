@@ -8,6 +8,7 @@
     "filesystem": "registry:dt/filesystem#0.0.0+20160316155526",
     "filewriter": "registry:dt/filewriter#0.0.0+20160316155526",
     "mocha": "registry:dt/mocha#2.2.5+20160619032855",
+    "sinon": "registry:dt/sinon#1.16.0+20160517064723",
     "webrtc/mediastream": "registry:dt/webrtc/mediastream#0.0.0+20160317120654"
   }
 }
