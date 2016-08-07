@@ -51,13 +51,13 @@ describe('CommitPickerPresenter', () => {
         presenter.handleMouseOut();
         assert.equal(updatePicker.callCount, 3);
         assert.equal(presenter.visible, false);
-        assert.equal(presenter.hoveringCommit, null);
+        assert.equal(presenter.hoveringCommit.url, commitHref); // keep last commit
 
         // mouseOver on not CommitURL
         presenter.handleMouseOver('http://example.com', document.createElement('a'));
         assert.equal(updatePicker.callCount, 3);
         assert.equal(presenter.visible, false);
-        assert.equal(presenter.hoveringCommit, null);
+        assert.equal(presenter.hoveringCommit.url, commitHref);
     });
 
     it('#handlePick, #handleCancel', () => {
