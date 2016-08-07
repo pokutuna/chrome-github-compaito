@@ -39,3 +39,11 @@ Usage
 - __set hostnames to enable picker__ (adaptable to GitHub Enterprise)
 
 ![set hostname demo](https://raw.githubusercontent.com/pokutuna/chrome-github-compaito/master/misc/set_hostname.gif)
+
+
+Changelog
+---
+- XXX
+  - Open a compare view in pull request review mode if it is available. (see [More code review tools](https://github.com/blog/2123-more-code-review-tools).) It's able to add a line comment in compare view.
+- 0.0.3 (2016-06-23)
+  - Fix commit url patterns.
