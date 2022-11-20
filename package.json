@@ -24,7 +24,7 @@
     "gulp-util": "^3.0.7",
     "gulp-zip": "^2.0.3",
     "karma": "^1.1.0",
-    "karma-browserify": "^5.0.5",
+    "karma-browserify": "^8.0.0",
     "karma-chai": "^0.1.0",
     "karma-html2js-preprocessor": "^1.0.0",
     "karma-jsdom-launcher": "^3.0.0",
