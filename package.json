@@ -17,7 +17,7 @@
     "es6-promise": "^2.0.1",
     "gulp": "github:gulpjs/gulp#4.0",
     "gulp-json-editor": "^2.2.1",
-    "gulp-less": "^3.1.0",
+    "gulp-less": "^5.0.0",
     "gulp-logger": "0.0.2",
     "gulp-notify": "^2.2.0",
     "gulp-pug": "^3.0.3",
