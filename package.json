@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "browserify": "^13.0.1",
-    "chai": "^3.5.0",
+    "chai": "^4.0.0",
     "es6-promise": "^2.0.1",
     "gulp": "github:gulpjs/gulp#4.0",
     "gulp-json-editor": "^2.2.1",
