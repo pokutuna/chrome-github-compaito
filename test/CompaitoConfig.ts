@@ -63,7 +63,7 @@ describe('CompaitoConfig', () => {
                 'returns default with invalid'
             );
             assert.equal(error.callCount, 1);
-            assert.match(error.args[0][0], /SyntaxError: Unexpected token i in JSON/);
+            assert.match(error.args[0][0], /SyntaxError: Expected property name or '}' in JSON/);
 
             localStorage.setItem('compaito', '{ "hosts": { "hoge": true } }');
             assert.deepEqual(
