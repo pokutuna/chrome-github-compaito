@@ -35,7 +35,6 @@
     "karma-mocha-reporter": "^2.2.5",
     "karma-sinon": "^1.0.5",
     "mocha": "^10.2.0",
-    "mock-local-storage": "^1.1.24",
     "path": "^0.12.7",
     "sinon": "10.0.0",
     "tsify": "^5.0.4",
