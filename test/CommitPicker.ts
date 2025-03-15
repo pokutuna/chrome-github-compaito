@@ -1,4 +1,5 @@
 /// <reference path="test.d.ts" />
+import * as sinon from 'sinon';
 import {
     ICommitPickerView,
     CommitPickerPresenter,
