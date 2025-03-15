@@ -1,7 +1,7 @@
 // Karma configuration
 // Generated on Wed Jun 29 2016 20:47:11 GMT+0900 (JST)
 
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -15,8 +15,8 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'test/**/*.ts',
-      'test/**/*.html'
+      { pattern: 'test/**/*.ts', type: 'js' },
+      { pattern: 'test/**/*.html' }
     ],
 
     // list of files to exclude
@@ -70,12 +70,6 @@ module.exports = function(config) {
     // Concurrency level
     // how many browser should be started simultaneous
     concurrency: Infinity,
-
-    client: {
-      mocha: {
-        require: [require.resolve('mock-local-storage')]
-      }
-    },
 
     browserify: {
       extensions: ['.ts'],

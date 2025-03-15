@@ -1,4 +1,3 @@
-/// <reference path="../typings/index.d.ts" />
 import { CompaitoConfig } from './components/CompaitoConfig';
 
 chrome.tabs.onUpdated.addListener(

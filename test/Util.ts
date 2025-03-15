@@ -1,4 +1,5 @@
 /// <reference path="test.d.ts" />
+import * as sinon from 'sinon';
 import { Util } from '../src/components/Util';
 
 describe('Util', () => {
