@@ -1,9 +1,10 @@
 /// <reference path="test.d.ts" />
 import * as sinon from 'sinon';
 import { CompaitoConfig } from '../src/components/CompaitoConfig';
+import { setupLocalStorageStub } from './LocalStorageStub';
 
 describe('CompaitoConfig', () => {
-    afterEach(() => { localStorage.clear() });
+    const storageStub = setupLocalStorageStub();
 
     it('#getHosts', async () => {
         let config = await CompaitoConfig.getConfig();
@@ -56,16 +57,7 @@ describe('CompaitoConfig', () => {
             );
             assert.equal(error.callCount, 0);
 
-            localStorage.setItem('compaito', '{ invalidjson }');
-            assert.deepEqual(
-                (await CompaitoConfig.getConfig()).getHosts(),
-                { 'github.com': true },
-                'returns default with invalid'
-            );
-            assert.equal(error.callCount, 1);
-            assert.match(error.args[0][0], /SyntaxError: Expected property name or '}' in JSON/);
-
-            localStorage.setItem('compaito', '{ "hosts": { "hoge": true } }');
+            await storageStub.set({ compaito: { hosts: { hoge: true } } });
             assert.deepEqual(
                 (await CompaitoConfig.getConfig()).getHosts(),
                 { 'hoge': true },
@@ -74,9 +66,9 @@ describe('CompaitoConfig', () => {
         });
 
         it('#saveConfig', async () => {
-            assert.equal(localStorage.getItem('compaito'), null);
             await CompaitoConfig.saveConfig({ hosts: { 'my.ghe.com': true } });
-            assert.equal(localStorage.getItem('compaito'), '{"hosts":{"my.ghe.com":true}}');
+            const result = await storageStub.get('compaito');
+            assert.deepEqual(result, { compaito: { hosts: { 'my.ghe.com': true } } });
         });
 
         it('#isHostsValid', () => {
