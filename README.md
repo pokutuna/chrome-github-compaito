@@ -43,6 +43,8 @@ Usage
 
 Changelog
 ---
+- 0.2.0 (2025-03-16)
+  - Support Manifest V3 and update all dependencies. (thanks to @shibayu36)
 - 0.1.0 (2016-08-07)
   - Open a compare view in pull request review mode if it is available. (see [More code review tools](https://github.com/blog/2123-more-code-review-tools).) It's able to add a line comment in compare view.
 - 0.0.3 (2016-06-23)
