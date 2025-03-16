@@ -1,25 +1,26 @@
 /// <reference path="test.d.ts" />
 import * as sinon from 'sinon';
 import { IConfigEditorView, ConfigEditorPresenter, ConfigEditorView } from '../src/components/ConfigEditor'
+import { setupLocalStorageStub } from './LocalStorageStub';
 
 function createConfigEditoView(): IConfigEditorView {
     return {
-        restoreHostConfigJson(): void {},
-        updateButton(): void {},
-        updateError(): void{},
+        restoreHostConfigJson(): void { },
+        updateButton(): void { },
+        updateError(): void { },
     };
 }
 
 describe('ConfigEditorPresenter', () => {
-    afterEach(() => { localStorage.clear() });
+    setupLocalStorageStub();
 
-    it('basic flow', () => {
+    it('basic flow', async () => {
         let view = createConfigEditoView();
         let updateButton = sinon.spy(view, 'updateButton');
         let presenter = new ConfigEditorPresenter(view);
 
         assert.ok(updateButton.notCalled);
-        presenter.setup();
+        await presenter.setup();
         assert.equal(updateButton.callCount, 1);
         assert.equal(presenter.hasDiff, false);
         assert.equal(presenter.hasSaved, false);
@@ -40,7 +41,7 @@ describe('ConfigEditorPresenter', () => {
         assert.equal(presenter.isSaveButtonEnable, true);
         assert.equal(presenter.saveButtonText, 'Save');
 
-        presenter.handleSave();
+        await presenter.handleSave();
         assert.equal(updateButton.callCount, 4);
         assert.equal(presenter.hasDiff, false);
         assert.equal(presenter.hasSaved, true);
@@ -55,11 +56,11 @@ describe('ConfigEditorPresenter', () => {
         assert.equal(presenter.saveButtonText, 'Save');
     });
 
-    it('#hostsJson', () => {
+    it('#hostsJson', async () => {
         let view = createConfigEditoView();
         let presenter = new ConfigEditorPresenter(view);
 
-        presenter.setup();
+        await presenter.setup();
         assert.equal(presenter.hostsJson, '{\n  "github.com": true\n}');
 
         presenter.handleHostConfigInput('{ "isNotValidJson');
@@ -69,9 +70,9 @@ describe('ConfigEditorPresenter', () => {
         assert.equal(presenter.hostsJson, '{\n  "isValidJson": true\n}');
 
         // new instance
-        presenter.handleSave();
+        await presenter.handleSave();
         presenter = new ConfigEditorPresenter(view);
-        presenter.setup();
+        await presenter.setup();
         assert.equal(presenter.hostsJson, '{\n  "isValidJson": true\n}');
     });
 });

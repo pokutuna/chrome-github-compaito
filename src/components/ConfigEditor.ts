@@ -19,10 +19,10 @@ class ConfigEditorPresenter extends Presenter {
         super(view);
         this.hasDiff  = false;
         this.hasSaved = false;
-        this.config   = CompaitoConfig.getConfig();
     }
 
-    setup(): void {
+    async setup(): Promise<void> {
+        this.config = await CompaitoConfig.getConfig();
         this.view.restoreHostConfigJson();
         this.view.updateButton();
     }
@@ -51,8 +51,8 @@ class ConfigEditorPresenter extends Presenter {
         this.view.updateButton();
     }
 
-    handleSave(): void {
-        this.config.save();
+    async handleSave(): Promise<void> {
+        await this.config.save();
         this.hasSaved = true;
         this.hasDiff  = false;
         this.view.updateButton();
@@ -83,8 +83,8 @@ class ConfigEditorView extends View implements IConfigEditorView {
         this.textarea.addEventListener('input', (e) => {
             this.presenter.handleHostConfigInput(this.textarea.value);
         });
-        this.saveButton.addEventListener('click', (e) => {
-            this.presenter.handleSave();
+        this.saveButton.addEventListener('click', async (e) => {
+            await this.presenter.handleSave();
         });
     }
 

@@ -6,7 +6,7 @@
         "forceConsistentCasingInFileNames": true,
         "noImplicitAny": true,
         "noImplicitReturns": true,
-        "rootDir": "src"
+        "rootDir": "."
     },
     "compileOnSave": false,
     "exclude": [ "node_modules" ]
