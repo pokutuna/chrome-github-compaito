@@ -1,18 +1,19 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
 
     "name": "compaito",
     "version": "generate by 'manifesft' gulp task",
     "description": "",
 
     "background": {
-        "scripts": ["js/background.js"],
-        "persistent": false
+        "service_worker": "js/background.js"
     },
     "options_page": "html/options.html",
-    "permissions": [
+    "host_permissions": [
         "http://*/*",
-        "https://*/*",
+        "https://*/*"
+    ],
+    "permissions": [
         "tabs"
     ],
     "icons": {
