@@ -5,13 +5,13 @@ import { CompaitoConfig } from '../src/components/CompaitoConfig';
 describe('CompaitoConfig', () => {
     afterEach(() => { localStorage.clear() });
 
-    it('#getHosts', () => {
-        let config = CompaitoConfig.getConfig();
+    it('#getHosts', async () => {
+        let config = await CompaitoConfig.getConfig();
         assert.deepEqual(config.getHosts(), { 'github.com': true });
     });
 
-    it('#setHosts', () => {
-        let config = CompaitoConfig.getConfig();
+    it('#setHosts', async () => {
+        let config = await CompaitoConfig.getConfig();
         assert.throws(config.setHosts.bind(config, 'hoge'), 'Invalid hosts');
         assert.doesNotThrow(
             config.setHosts.bind(config, { 'github.com': true }),
@@ -19,8 +19,8 @@ describe('CompaitoConfig', () => {
         );
     });
 
-    it('#isHostEnabled', () => {
-        let config = CompaitoConfig.getConfig();
+    it('#isHostEnabled', async () => {
+        let config = await CompaitoConfig.getConfig();
         config.setHosts({
             'github.com': true,
             'my.ghe.com': true,
@@ -46,11 +46,11 @@ describe('CompaitoConfig', () => {
             );
         });
 
-        it('#getConfig', () => {
+        it('#getConfig', async () => {
             let error = sinon.stub(console, 'error');
 
             assert.deepEqual(
-                CompaitoConfig.getConfig().getHosts(),
+                (await CompaitoConfig.getConfig()).getHosts(),
                 { 'github.com': true },
                 'returns default'
             );
@@ -58,7 +58,7 @@ describe('CompaitoConfig', () => {
 
             localStorage.setItem('compaito', '{ invalidjson }');
             assert.deepEqual(
-                CompaitoConfig.getConfig().getHosts(),
+                (await CompaitoConfig.getConfig()).getHosts(),
                 { 'github.com': true },
                 'returns default with invalid'
             );
@@ -67,15 +67,15 @@ describe('CompaitoConfig', () => {
 
             localStorage.setItem('compaito', '{ "hosts": { "hoge": true } }');
             assert.deepEqual(
-                CompaitoConfig.getConfig().getHosts(),
+                (await CompaitoConfig.getConfig()).getHosts(),
                 { 'hoge': true },
                 'returns stored config'
             );
         });
 
-        it('#saveConfig', () => {
+        it('#saveConfig', async () => {
             assert.equal(localStorage.getItem('compaito'), null);
-            CompaitoConfig.saveConfig({ hosts: { 'my.ghe.com': true } });
+            await CompaitoConfig.saveConfig({ hosts: { 'my.ghe.com': true } });
             assert.equal(localStorage.getItem('compaito'), '{"hosts":{"my.ghe.com":true}}');
         });
 

@@ -15,7 +15,8 @@
     ],
     "permissions": [
         "tabs",
-        "scripting"
+        "scripting",
+        "storage"
     ],
     "icons": {
         "16":  "img/compaito16.png",

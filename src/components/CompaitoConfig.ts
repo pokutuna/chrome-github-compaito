@@ -10,8 +10,8 @@ class CompaitoConfig {
         this.data = data;
     }
 
-    save(): void {
-        CompaitoConfig.saveConfig(this.data);
+    save(): Promise<void> {
+        return CompaitoConfig.saveConfig(this.data);
     }
 
     // hosts
@@ -38,10 +38,11 @@ class CompaitoConfig {
         return { hosts: { 'github.com': true } };
     }
 
-    static getConfig(): CompaitoConfig {
+    static async getConfig(): Promise<CompaitoConfig> {
         let data: CompaitoConfigData;
         try {
-            data = JSON.parse(localStorage.getItem('compaito'))
+            const result = await chrome.storage.local.get('compaito');
+            data = result.compaito;
         } catch(e) {
             console.error(e.toString());
         };
@@ -49,8 +50,8 @@ class CompaitoConfig {
         return new CompaitoConfig(data);
     }
 
-    static saveConfig(data: CompaitoConfigData): void {
-        localStorage.setItem('compaito', JSON.stringify(data))
+    static saveConfig(data: CompaitoConfigData): Promise<void> {
+        return chrome.storage.local.set({ compaito: data });
     }
 
     static isHostsValid(hosts: any): boolean {
