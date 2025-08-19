@@ -16,7 +16,7 @@
     "@types/mocha": "^10.0.10",
     "@types/sinon": "10.0.0",
     "browserify": "^17.0.0",
-    "chai": "^4.3.7",
+    "chai": "^5.0.0",
     "es6-promise": "^4.2.8",
     "gulp": "^4.0.2",
     "gulp-json-editor": "^2.5.6",
